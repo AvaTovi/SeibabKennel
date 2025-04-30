@@ -25,9 +25,9 @@
 
 /* Left column (text info) */
 .hero-bottom-left {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  margin-left: 0;
+  padding-left: 1rem;  /* or 0 if you want it flush against the edge */
+  color: white;
 }
 
 .hero-info-text p {
