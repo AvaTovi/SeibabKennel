@@ -1,0 +1,46 @@
+.seibab-info-container {
+    padding: 4rem 2rem;
+    padding-top: 100px;
+    background-color: #000;
+    margin-bottom: -150px;
+    color: white;
+    min-height: 100vh;
+    text-align: center;
+  }
+  
+  .seibab-listings {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .dog-card {
+    background-color: #111;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 250px;
+    transition: transform 0.3s ease;
+  }
+  
+  .dog-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .dog-card img {
+    width: 100%;
+    border-radius: 4px;
+  }
+  
+  .dog-card h2 {
+    margin-top: 1rem;
+    font-size: 1.4rem;
+  }
+  
+  .dog-card p {
+    font-size: 0.95rem;
+    color: #ccc;
+  }
+  

@@ -1,0 +1,24 @@
+/* src/Components/Contact/Contact.css */
+.contact-page {
+    padding: 10rem;
+    color: white;
+    max-width: 600px;
+    margin: 0 auto;
+    margin-bottom: 25px;
+    background-color: black;
+  }
+  .contact-form label {
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+  }
+  .contact-form button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  

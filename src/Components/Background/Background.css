@@ -1,0 +1,16 @@
+.background {
+  background-color: black;
+}
+
+/* Small visible video box on the right */
+.background-video {
+  position: fixed;
+  top: 50px;             /* adjust based on navbar height */
+  right: 20px;            /* distance from right edge */
+  width: 220px;           /* shrink width */
+  height: 40px;          /* shrink height */
+  object-position: center;
+  background-color: black;
+  z-index: 100;           /* keep it above background but below overlays */
+  border-radius: 10px;
+}

@@ -1,0 +1,77 @@
+.nav {
+  position: fixed;
+  width: 100%;
+  height: 100px; /* or whatever your navbar height is */
+  background-color: black; /* lighter black */
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  z-index: 1000;
+}
+
+.nav a {
+  text-decoration: none;
+  color: white;
+}
+
+.nav a:visited {
+  color: white;
+}
+
+/* Fixed logo + text container */
+.nav-brand-fixed {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 20px;     /* stays fixed at left */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Logo image */
+.nav-logo-img {
+  height: 80px;
+  width: 80px;
+  margin-right: 15px;
+}
+
+/* Logo text */
+.nav-logo-text {
+  font-size: 28px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  white-space: nowrap;
+  text-decoration: none;
+  color: white;
+}
+
+/* Navigation links */
+.nav-menu {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+  margin-left: auto;
+  margin-right: 40px; /* 👈 move nav links left by 40px */
+  padding: 0;
+}
+
+
+.nav-menu li a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+}
+
+.nav-contact a {
+  padding: 8px 16px;
+  background-color: red;
+  color: black;
+  border-radius: 999px;
+}
+
+.nav-brand-link {
+  text-decoration: none;
+  color: inherit;
+}

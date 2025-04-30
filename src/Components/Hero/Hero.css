@@ -1,0 +1,63 @@
+.hero-bottom-navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: center; /* center content horizontally */
+  padding: 1rem 2rem;
+  z-index: 100;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  gap: 2rem; /* spacing between left and right */
+}
+
+/* Inner container to hold both left and right content centered */
+.hero-bottom-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px; /* prevent overflow on wide screens */
+  flex-wrap: wrap;
+}
+
+/* Left column (text info) */
+.hero-bottom-left {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.hero-info-text p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+/* Right column (links) */
+.hero-bottom-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 1;
+}
+
+.hero-info-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.hero-info-links li a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.hero-info-links li a:hover {
+  text-decoration: underline;
+}
