@@ -1,6 +1,7 @@
 /* src/Components/Contact/Contact.css */
 .contact-page {
-    padding: 10rem;
+    padding-top: 200px;
+    padding-bottom: 200px;
     color: white;
     max-width: 600px;
     margin: 0 auto;

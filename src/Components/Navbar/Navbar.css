@@ -1,8 +1,8 @@
 .nav {
   position: fixed;
   width: 100%;
-  height: 100px; /* or whatever your navbar height is */
-  background-color: black; /* lighter black */
+  height: 100px;
+  background-color: black;
   color: white;
   display: flex;
   justify-content: space-between;
@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   position: absolute;
-  left: 20px;     /* stays fixed at left */
+  left: 20px;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -37,9 +37,9 @@
   margin-right: 15px;
 }
 
-/* Logo text */
+/* Logo text - responsive using clamp */
 .nav-logo-text {
-  font-size: 28px;
+  font-size: clamp(14px, 5vw, 28px); /* min: 14px, preferred: 5% viewport width, max: 28px */
   font-weight: 600;
   font-family: 'Outfit', sans-serif;
   white-space: nowrap;
@@ -50,18 +50,17 @@
 /* Navigation links */
 .nav-menu {
   display: flex;
-  gap: 40px;
+  gap: clamp(10px, 5vw, 40px); /* Responsive gap */
   list-style: none;
   margin-left: auto;
-  margin-right: 40px; /* 👈 move nav links left by 40px */
+  margin-right: 40px;
   padding: 0;
 }
-
 
 .nav-menu li a {
   text-decoration: none;
   color: white;
-  font-size: 16px;
+  font-size: clamp(12px, 2.5vw, 16px); /* min 12px, max 16px */
 }
 
 .nav-contact a {
@@ -74,4 +73,49 @@
 .nav-brand-link {
   text-decoration: none;
   color: inherit;
+}
+
+/* ===================== */
+/* Responsive Adjustments */
+/* ===================== */
+@media screen and (max-width: 600px) {
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 10px 20px;
+  }
+
+  .nav-brand-fixed {
+    position: static;
+    transform: none;
+    margin-bottom: 10px;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    gap: 12px;
+  }
+
+  .nav-menu li a {
+    font-size: clamp(12px, 4vw, 16px);
+  }
+
+  .nav-contact a {
+    font-size: clamp(12px, 4vw, 16px);
+    padding: 6px 12px;
+  }
+
+  .nav-logo-img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .nav-logo-text {
+    font-size: clamp(14px, 5vw, 22px);
+  }
 }
