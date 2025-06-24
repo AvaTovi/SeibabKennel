@@ -1,11 +1,17 @@
+// src/Components/Background/Background.jsx
+import React from 'react';
 import './Background.css';
-import video1 from '../../assets/SK1.mp4';
+import video1 from '../../assets/SK1.mp4';            // ← put this back
 
 const Background = ({ playStatus }) => {
+  if (!playStatus) return null;
+
   return (
-    <video className="background-video" autoPlay loop muted>
-      <source src={video1} type="video/mp4" />
-    </video>
+    <div className="background-frame">
+      <video className="background-video" autoPlay loop muted>
+        <source src={video1} type="video/mp4" />
+      </video>
+    </div>
   );
 };
 

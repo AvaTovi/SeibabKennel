@@ -1,16 +1,55 @@
+/* src/Components/Background/Background.css */
+
+/* 1) Define your “knobs” at the top */
+:root {
+  /* heights of your fixed navbars (so the video never overlaps) */
+  --top-nav-height: 100px;
+  --bottom-nav-height: 140px;
+
+  /* video width range: min 200px, ideal 30vw, max 400px */
+  --video-w-min: 200px;
+  --video-w-ideal: 30vw;
+  --video-w-max: 400px;
+}
+
+/* 2) Make the container black (no full-bleed video) */
 .background {
   background-color: black;
 }
 
-/* Small visible video box on the right */
+/* 3) Position & size your little framed video */
 .background-video {
-  position: fixed;
-  top: 50px;             /* adjust based on navbar height */
-  right: 20px;            /* distance from right edge */
-  width: 220px;           /* shrink width */
-  height: 40px;          /* shrink height */
+  position: absolute;
+  top: var(--top-nav-height);
+  right: 2%;  /* small gutter from right edge */
+
+  /* width is fully fluid between 200px and 400px, preferring 30vw */
+  width: clamp(var(--video-w-min), var(--video-w-ideal), var(--video-w-max));
+
+  /* lock aspect ratio to 16:9 so height auto-calculates */
+  aspect-ratio: 16 / 9;
+
+  /* also never exceed the available vertical space */
+  max-height: calc(100vh - var(--top-nav-height) - var(--bottom-nav-height));
+
+  object-fit: cover;
   object-position: center;
-  background-color: black;
-  z-index: 100;           /* keep it above background but below overlays */
-  border-radius: 10px;
+
+  /* bring it above your page background but below your hero text */
+  z-index: 1;
+
+  /* styling for the little frame */
+  border: 2px solid #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* 4) fade-in animation if you still want it */
+.fade-in {
+  animation: fadeIn 500ms ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }

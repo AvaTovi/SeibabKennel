@@ -1,121 +1,57 @@
-.nav {
-  position: fixed;
-  width: 100%;
-  height: 100px;
-  background-color: black;
+/* Banner background + logo + slogan */
+.header-banner {
+  background-color: #002147;  /* deep navy */
   color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0;
-  z-index: 1000;
+  padding: 1rem 2rem;
 }
-
-.nav a {
-  text-decoration: none;
-  color: white;
-}
-
-.nav a:visited {
-  color: white;
-}
-
-/* Fixed logo + text container */
-.nav-brand-fixed {
+.header-content {
   display: flex;
   align-items: center;
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
 }
-
-/* Logo image */
-.nav-logo-img {
+.header-logo {
   height: 80px;
-  width: 80px;
-  margin-right: 15px;
+  width: auto;
+}
+.header-text {
+  margin-left: 1rem;
+}
+.header-text h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+.header-text p {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin: 0;
 }
 
-/* Logo text - responsive using clamp */
-.nav-logo-text {
-  font-size: clamp(14px, 5vw, 28px); /* min: 14px, preferred: 5% viewport width, max: 28px */
-  font-weight: 600;
-  font-family: 'Outfit', sans-serif;
-  white-space: nowrap;
-  text-decoration: none;
-  color: white;
-}
-
-/* Navigation links */
+/* Simple nav below banner */
 .nav-menu {
+  margin-top: 0.75rem;
   display: flex;
-  gap: clamp(10px, 5vw, 40px); /* Responsive gap */
-  list-style: none;
-  margin-left: auto;
-  margin-right: 40px;
-  padding: 0;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
-
-.nav-menu li a {
-  text-decoration: none;
+.nav-link {
   color: white;
-  font-size: clamp(12px, 2.5vw, 16px); /* min 12px, max 16px */
+  text-decoration: none;
+  font-weight: 500;
 }
-
-.nav-contact a {
-  padding: 8px 16px;
-  background-color: red;
-  color: black;
+.nav-contact-button {
+  background-color: #e53935; /* red */
+  padding: 0.5rem 1rem;
   border-radius: 999px;
 }
 
-.nav-brand-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* ===================== */
-/* Responsive Adjustments */
-/* ===================== */
-@media screen and (max-width: 600px) {
-  .nav {
+/* Responsive at smaller breakpoints */
+@media (max-width: 600px) {
+  .header-content {
     flex-direction: column;
-    align-items: flex-start;
-    height: auto;
-    padding: 10px 20px;
+    align-items: center;
+    text-align: center;
   }
-
-  .nav-brand-fixed {
-    position: static;
-    transform: none;
-    margin-bottom: 10px;
-  }
-
   .nav-menu {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    gap: 12px;
-  }
-
-  .nav-menu li a {
-    font-size: clamp(12px, 4vw, 16px);
-  }
-
-  .nav-contact a {
-    font-size: clamp(12px, 4vw, 16px);
-    padding: 6px 12px;
-  }
-
-  .nav-logo-img {
-    width: 60px;
-    height: 60px;
-  }
-
-  .nav-logo-text {
-    font-size: clamp(14px, 5vw, 22px);
+    justify-content: center;
+    gap: 1rem;
   }
 }

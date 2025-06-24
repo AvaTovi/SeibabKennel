@@ -1,0 +1,53 @@
+/* ====== Page container ====== */
+.home-page {
+    /* pushes content below your fixed navbar (100px tall) */
+    padding-top: 100px;
+    /* pushes content above your fixed footer (100px tall) */
+    padding-bottom: 100px;
+    background-color: #000;    /* black background */
+    min-height: 100vh;         /* ensure it fills viewport */
+  }
+  
+  /* ====== Grid wrapper ====== */
+  .media-grid {
+    display: grid;
+    grid-template-areas:
+      "main main thumb1 thumb2"
+      "main main thumb3 thumb4";
+    grid-gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  /* ====== Main (big) media slot ====== */
+  .media-main {
+    grid-area: main;
+    background: #111;          /* dark grey frame */
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .media-main video.media-main-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* ====== Thumbnails ====== */
+  .media-thumb {
+    background: #111;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .media-thumb:nth-child(2) { grid-area: thumb1; }
+  .media-thumb:nth-child(3) { grid-area: thumb2; }
+  .media-thumb:nth-child(4) { grid-area: thumb3; }
+  .media-thumb:nth-child(5) { grid-area: thumb4; }
+  
+  .media-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  

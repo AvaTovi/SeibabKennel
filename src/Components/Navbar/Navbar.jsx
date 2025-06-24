@@ -1,22 +1,25 @@
-import './Navbar.css';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../assets/logo1.jpg';
+import logoImg from '../../assets/logo1.jpg'; // your logo
+import './Navbar.css';
 
 const Navbar = () => {
   return (
-    <nav className="nav">
-      <Link to="/" className="nav-brand-fixed">
-        <img src={logo} alt="Logo" className="nav-logo-img" />
-        <span className="nav-logo-text">Seibab Kennel</span>
-      </Link>
-
-      <ul className="nav-menu">
-        <li><Link to="/"></Link></li>
-        <li><Link to="/info">Seibab Information</Link></li>
-        <li><Link to="/about">About</Link></li>
-        <li className="nav-contact"><Link to="/contact">Contact Us</Link></li>
-      </ul>
-    </nav>
+    <header className="header-banner">
+      <div className="header-content">
+        <img src={logoImg} alt="Seibab Kennel Logo" className="header-logo" />
+        <div className="header-text">
+          <h1>Seibab Kennel</h1>
+          <p>Best and Most Affordable Prices</p>
+        </div>
+      </div>
+      <nav className="nav-menu">
+        <Link to="/" className="nav-link">Home</Link>
+        <Link to="/info" className="nav-link">Seibab Information</Link>
+        <Link to="/about" className="nav-link">About</Link>
+        <Link to="/contact" className="nav-link nav-contact-button">Contact Us</Link>
+      </nav>
+    </header>
   );
 };
 
