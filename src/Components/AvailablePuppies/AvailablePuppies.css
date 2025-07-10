@@ -1,4 +1,4 @@
-.seibab-info-container {
+.dog-info-container {
     padding: 4rem 2rem;
     padding-top: 200px;
     padding-bottom: 200px;
@@ -9,7 +9,7 @@
     text-align: center;
   }
   
-  .seibab-listings {
+  .dog-listings {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

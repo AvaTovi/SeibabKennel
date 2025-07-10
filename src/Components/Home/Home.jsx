@@ -1,45 +1,92 @@
-import React from 'react';
-import './Home.css';
+import React, { useState } from "react";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+import "./home.css";
 
-// replace these with your real assets
-import mainVideo from '../assets/SK1.mp4';
-import thumb1 from '../assets/dog1.jpg';
-import thumb2 from '../assets/dog2.jpg';
-import thumb3 from '../assets/dog3.jpg';
-import thumb4 from '../assets/dog4.jpg';
+import video1 from "../../assets/SK1.mp4";
+import dog1 from "../../assets/dog1.png";
+import dog2 from "../../assets/dog2.png";
+import dog3 from "../../assets/dog3.png";
+import dog4 from "../../assets/dog4.jpg";
+import dog5 from "../../assets/seibab_dog.jpg";
+import dog6 from "../../assets/seibab_dog2.jpg";
+import dog7 from "../../assets/seibab_dog3.jpg";
+import dog8 from "../../assets/seibab_dog4.jpg";
 
-const Home = () => {
+const mediaItems = [
+  { type: "video", src: video1, title: "Seibab Walk" },
+  { type: "image", src: dog1, title: "Dog 1" },
+  { type: "image", src: dog2, title: "Dog 2" },
+  { type: "image", src: dog3, title: "Dog 3" },
+  { type: "image", src: dog4, title: "Dog 4" },
+  { type: "image", src: dog5, title: "Dog 5" },
+  { type: "image", src: dog6, title: "Dog 6" },
+  { type: "image", src: dog7, title: "Dog 7" },
+  { type: "image", src: dog8, title: "Dog 8" },
+];
+
+export default function Home() {
+  const [openIndex, setOpenIndex] = useState(-1);
+
+  // Build slides array for the Lightbox component
+  const slides = mediaItems.map((m) => ({
+    type: m.type,
+    src: m.src,
+    title: m.title,
+  }));
+
   return (
-    <div className="home-page">
-      <div className="media-grid">
-        {/* Big main video */}
-        <div className="media-main">
-          <video
-            src={mainVideo}
-            autoPlay
-            loop
-            muted
-            controls={false}
-            className="media-main-video"
-          />
-        </div>
-
-        {/* 4 placeholder thumbs */}
-        <div className="media-thumb">
-          <img src={thumb1} alt="Placeholder 1" />
-        </div>
-        <div className="media-thumb">
-          <img src={thumb2} alt="Placeholder 2" />
-        </div>
-        <div className="media-thumb">
-          <img src={thumb3} alt="Placeholder 3" />
-        </div>
-        <div className="media-thumb">
-          <img src={thumb4} alt="Placeholder 4" />
-        </div>
+    <main className="home">
+      {/* Video thumbnail */}
+      <div className="home-video-container">
+        <video
+          className="home-video"
+          src={video1}
+          autoPlay
+          loop
+          muted
+          onClick={() => setOpenIndex(0)}
+        />
       </div>
-    </div>
-  );
-};
 
-export default Home;
+      {/* Gallery Thumbnails */}
+      <section className="home-gallery">
+        {mediaItems.slice(1).map((item, i) => (
+          <div
+            className="thumb"
+            key={i + 1}
+            onClick={() => setOpenIndex(i + 1)}
+          >
+            <img src={item.src} alt={item.title} />
+          </div>
+        ))}
+      </section>
+
+      {/* Lightbox */}
+      {openIndex >= 0 && (
+        <Lightbox
+          open={true}
+          index={openIndex}
+          close={() => setOpenIndex(-1)}
+          slides={slides}
+          render={{
+            slide: ({ slide }) =>
+              slide.type === "video" ? (
+                <video
+                  src={slide.src}
+                  controls
+                  style={{ maxWidth: "100%", maxHeight: "100%" }}
+                />
+              ) : (
+                <img
+                  src={slide.src}
+                  alt={slide.title}
+                  style={{ maxWidth: "100%", maxHeight: "100%" }}
+                />
+              ),
+          }}
+        />
+      )}
+    </main>
+  );
+}

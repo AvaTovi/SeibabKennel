@@ -6,9 +6,9 @@ const Footer = () => (
   <footer className="footer">
     <nav className="footer-nav">
       <Link to="/" className="footer-link">Home</Link>
-      <Link to="/info" className="footer-link">Seibab Information</Link>
+      <Link to="/info" className="footer-link">Available Puppies</Link>
       <Link to="/about" className="footer-link">About</Link>
-      <Link to="/contact" className="footer-link">Contact Us</Link>
+      <Link to="/contact" className="footer-link">Contact</Link>
     </nav>
     <div className="footer-info">
       <p>Seibab Kennel Inc. © 2023</p>

@@ -1,7 +1,7 @@
 import React from 'react';
-import './SeibabInformation.css';
+import './AvailablePuppies.css';
 
-const SeibabInformation = () => {
+const AvailablePuppies = () => {
   const dogs = [
     {
       name: 'Bruno',
@@ -31,9 +31,9 @@ const SeibabInformation = () => {
   ];
 
   return (
-    <div className="seibab-info-container">
+    <div className="dog-info-container">
       <h1>Available Seibabs</h1>
-      <div className="seibab-listings">
+      <div className="dog-listings">
         {dogs.map((dog, index) => (
           <div className="dog-card" key={index}>
             <img src={dog.image} alt={dog.name} />
@@ -46,4 +46,4 @@ const SeibabInformation = () => {
   );
 };
 
-export default SeibabInformation;
+export default AvailablePuppies;

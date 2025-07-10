@@ -1,57 +1,91 @@
-/* Banner background + logo + slogan */
 .header-banner {
-  background-color: #002147;  /* deep navy */
-  color: white;
+  background-color: #000;
+  color: #fff;
   padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 2px solid #444;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
+
 .header-content {
   display: flex;
   align-items: center;
+  margin-bottom: 0.5rem;
 }
+
 .header-logo {
   height: 80px;
-  width: auto;
+  width: auto;    /* unchanged */
 }
+
 .header-text {
   margin-left: 1rem;
 }
 .header-text h1 {
-  font-size: 2rem;
   margin: 0;
+  font-size: 2rem;
 }
 .header-text p {
+  margin: 0;
   font-size: 1rem;
   opacity: 0.8;
-  margin: 0;
 }
 
-/* Simple nav below banner */
 .nav-menu {
-  margin-top: 0.75rem;
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 2rem;
   flex-wrap: wrap;
-}
-.nav-link {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-}
-.nav-contact-button {
-  background-color: #e53935; /* red */
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
+  width: 100%;
 }
 
-/* Responsive at smaller breakpoints */
+.nav-link {
+  position: relative;
+  display: inline-block;        /* add boxing */
+  padding: 0.5rem 1rem;         /* add boxing */
+  border: 2px solid #fff;       /* add boxing */
+  border-radius: 4px;           /* slight rounding */
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 200ms, color 200ms;
+}
+.nav-link:hover {
+  background: #fff;
+  color: #000;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #e53935;
+  transition: width 200ms;
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-contact-button {
+  background-color: #e53935;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 2px solid #e53935;    /* boxing like the links */
+}
+
+/* mobile stacking */
 @media (max-width: 600px) {
   .header-content {
     flex-direction: column;
-    align-items: center;
     text-align: center;
   }
   .nav-menu {
-    justify-content: center;
     gap: 1rem;
   }
 }
