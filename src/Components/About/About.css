@@ -1,32 +1,48 @@
-/* src/Components/About/About.css */
-
-/* 1. Flex container that sits immediately under your navbar */
-.about-container {
-  display: flex;
-  justify-content: center; /* horizontally center */
-  padding: 1rem;            /* small breathing room around */
-}
-
-/* 2. Your card itself */
 .about-page {
-  max-width: 800px;         /* don’t let it stretch too wide */
-  width: 100%;
-  background-color: #111;
+  padding: 4rem 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #000;
   color: #fff;
-  border-radius: 6px;
-  padding: 1.5rem;
   font-family: 'Outfit', sans-serif;
   line-height: 1.6;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-/* 3. Responsive typography */
-.about-page h1 {
-  font-size: clamp(1.75rem, 4vw, 2.25rem);
+.about-logo-container {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.about-logo {
+  max-width: 300px;     /* controls how big the logo can grow */
+  width: 50%;           /* responsive: up to 300px or 50% of container */
+  height: auto;
+  display: inline-block;
+  border-radius: 8px;   /* slight rounding if desired */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.about-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.about-content p {
+  font-size: 1.125rem;
   margin-bottom: 1rem;
 }
 
-.about-page p {
-  font-size: clamp(1rem, 2.5vw, 1.125rem);
-  margin-bottom: 1rem;
+/* Responsive tweak */
+@media (max-width: 600px) {
+  .about-logo {
+    width: 70%;
+    max-width: 200px;
+  }
+  .about-content h1 {
+    font-size: 2rem;
+  }
+  .about-content p {
+    font-size: 1rem;
+  }
 }
