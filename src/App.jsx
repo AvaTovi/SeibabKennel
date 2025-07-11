@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar";
-import Home from "./Components/Home/home";
+import Home from "./Components/Home/Home";
 import AvailablePuppies from "./Components/AvailablePuppies/AvailablePuppies";
 import About from "./Components/About/About";
 import Contact from "./Components/Contact/Contact";
@@ -13,7 +13,6 @@ const App = () => (
     <Navbar />
     <Routes>
       <Route path="/" element={<Home />} />
-      {/* Changed path from "/info" to "/available-puppies" */}
       <Route path="/available-puppies" element={<AvailablePuppies />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
