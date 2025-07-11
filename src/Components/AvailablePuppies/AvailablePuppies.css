@@ -1,47 +1,108 @@
-.dog-info-container {
-    padding: 4rem 2rem;
-    padding-top: 200px;
-    padding-bottom: 200px;
-    background-color: #000;
-    margin-bottom: -150px;
-    color: white;
-    min-height: 100vh;
-    text-align: center;
-  }
-  
-  .dog-listings {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-  
-  .dog-card {
-    background-color: #111;
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 1rem;
-    width: 250px;
-    transition: transform 0.3s ease;
-  }
-  
-  .dog-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .dog-card img {
-    width: 100%;
-    border-radius: 4px;
-  }
-  
-  .dog-card h2 {
-    margin-top: 1rem;
-    font-size: 1.4rem;
-  }
-  
-  .dog-card p {
-    font-size: 0.95rem;
-    color: #ccc;
-  }
-  
+.available-page {
+  padding: 4rem 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  color: #fff;
+}
+
+.available-page h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #e14e3d;
+  margin-bottom: 80px;
+  font-size: 2.5rem;
+}
+
+.puppy-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.puppy-card {
+  background: #111;
+  border: 2px solid #444;
+  border-radius: 6px;
+  overflow: hidden;
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 200ms, box-shadow 200ms;
+}
+.puppy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+}
+
+.puppy-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.puppy-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.puppy-desc {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.puppy-price {
+  font-weight: bold;
+  margin: 0;
+  font-size: 1rem;
+  color: #e53935;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal content */
+.modal-content {
+  position: relative;
+  background: #111;
+  border: 2px solid #444;
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  font-size: 2rem;
+}
+
+.modal-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+}

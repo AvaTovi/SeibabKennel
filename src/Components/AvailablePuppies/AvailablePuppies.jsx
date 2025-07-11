@@ -1,49 +1,81 @@
-import React from 'react';
-import './AvailablePuppies.css';
+import React, { useState } from "react";
+import "./AvailablePuppies.css";
 
-const AvailablePuppies = () => {
-  const dogs = [
-    {
-      name: 'Bruno',
-      image: 'https://via.placeholder.com/250x180?text=Dog+1',
-      desc: 'A strong, energetic Seibab with a gentle personality.'
-    },
-    {
-      name: 'Luna',
-      image: 'https://via.placeholder.com/250x180?text=Dog+2',
-      desc: 'Loyal and affectionate. Great with kids and families.'
-    },
-    {
-      name: 'Max',
-      image: 'https://via.placeholder.com/250x180?text=Dog+3',
-      desc: 'Protective and smart. Makes a great guardian.'
-    },
-    {
-      name: 'Zara',
-      image: 'https://via.placeholder.com/250x180?text=Dog+4',
-      desc: 'Playful Seibab pup, eager to learn and explore.'
-    },
-    {
-      name: 'Duke',
-      image: 'https://via.placeholder.com/250x180?text=Dog+5',
-      desc: 'Calm temperament and very obedient in training.'
-    }
-  ];
+const puppies = [
+  {
+    id: 1,
+    name: "Bella",
+    src: "/assets/dog1.png",
+    desc: "Fawn Female, smooth coat, champion bloodlines.",
+    price: "$2,500",
+  },
+  {
+    id: 2,
+    name: "Max",
+    src: "/assets/dog2.png",
+    desc: "Blue Brindle Male, extra XL, outstanding temperament.",
+    price: "$2,800",
+  },
+  {
+    id: 3,
+    name: "Luna",
+    src: "/assets/dog3.png",
+    desc: "Lilac Female, 14 weeks old, super friendly.",
+    price: "$3,100",
+  },
+  {
+    id: 4,
+    name: "Rocky",
+    src: "/assets/dog4.jpg",
+    desc: "Fawn Male, 11 weeks, very sociable and smart.",
+    price: "$2,700",
+  },
+  // …add as many as you’d like
+];
+
+export default function AvailablePuppies() {
+  const [selected, setSelected] = useState(null);
 
   return (
-    <div className="dog-info-container">
-      <h1>Available Seibabs</h1>
-      <div className="dog-listings">
-        {dogs.map((dog, index) => (
-          <div className="dog-card" key={index}>
-            <img src={dog.image} alt={dog.name} />
-            <h2>{dog.name}</h2>
-            <p>{dog.desc}</p>
+    <main className="available-page">
+      <h2>Available XL Bullies</h2>
+      <div className="puppy-grid">
+        {puppies.map((p) => (
+          <div
+            key={p.id}
+            className="puppy-card"
+            onClick={() => setSelected(p)}
+          >
+            <h3>{p.name}</h3>
+            <img src={p.src} alt={p.name} />
+            <p className="puppy-desc">{p.desc}</p>
+            <p className="puppy-price">{p.price}</p>
           </div>
         ))}
       </div>
-    </div>
-  );
-};
 
-export default AvailablePuppies;
+      {selected && (
+        <div
+          className="modal-overlay"
+          onClick={() => setSelected(null)}
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="modal-close"
+              onClick={() => setSelected(null)}
+            >
+              ×
+            </button>
+            <h3>{selected.name}</h3>
+            <img src={selected.src} alt={selected.name} />
+            <p>{selected.desc}</p>
+            <p className="puppy-price">{selected.price}</p>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}

@@ -1,22 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import logoImg from "../../assets/logo1.jpg";
+import { Link, NavLink } from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar = () => (
   <header className="header-banner">
     <div className="header-content">
-      <img src={logoImg} alt="Seibab Kennel Logo" className="header-logo" />
+      <img src="/logo.png" alt="Seibab Kennel logo" className="header-logo" />
       <div className="header-text">
         <h1>Seibab Kennel</h1>
         <p>Best and Affordable Prices</p>
       </div>
     </div>
     <nav className="nav-menu">
-      <Link to="/"       className="nav-link">Home</Link>
-      <Link to="/info"   className="nav-link">Available Puppies</Link>
-      <Link to="/about"  className="nav-link">About</Link>
-      <Link to="/contact" className="nav-link nav-contact-button">Contact Us</Link>
+      <NavLink to="/" className="nav-link">Home</NavLink>
+      <NavLink to="/available-puppies" className="nav-link">Available Puppies</NavLink>
+      <NavLink to="/about" className="nav-link">About</NavLink>
+      <Link   to="/contact" className="nav-contact-button">Contact Us</Link>
     </nav>
   </header>
 );

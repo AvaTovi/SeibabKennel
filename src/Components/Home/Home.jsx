@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import "./home.css";
-
 import video1 from "../../assets/SK1.mp4";
 import dog1 from "../../assets/dog1.png";
 import dog2 from "../../assets/dog2.png";
@@ -37,6 +37,17 @@ export default function Home() {
 
   return (
     <main className="home">
+        {/* above vid/pic container */}
+        <div className="above-pic-container">
+        <div className="text1">Welcome to Seibab Kennel!</div>
+        <div className="text2">Extreme / XL American Bully’s</div>
+        <div className="text3">
+          Discover our elite breeding program—where health, temperament,
+          and championship bloodlines come together to raise your next
+          loyal companion.
+        </div>
+        <Link to="/available-puppies" className="browse-button">Browse Available Puppies</Link>
+      </div>
       {/* Video thumbnail */}
       <div className="home-video-container">
         <video
@@ -87,6 +98,12 @@ export default function Home() {
           }}
         />
       )}
+
+      {/* below vid/pic container */}
+      <div className="below-pic-container">
+        <div className="text4">Ready to Browse Puppies?</div>
+        <Link to="/available-puppies" className="browse-button2">Browse Available Puppies</Link>
+      </div>
     </main>
   );
 }
