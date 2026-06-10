@@ -1,25 +1,40 @@
-/* Full-height responsive container */
-.home-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap");
+
+:root {
+  --bg: #070707;
+  --bg-soft: #111111;
+  --card: rgba(255, 255, 255, 0.07);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --text: #ffffff;
+  --muted: #c9c9c9;
+  --accent: #d94a38;
+  --accent-dark: #b8382a;
+  --max-width: 1180px;
 }
 
-/* Ensure Background covers the full viewport */
-.background,
-.background-video{
-  width: 100vw;
-  height: 100vh;
+* {
+  box-sizing: border-box;
 }
 
-/* Hero centered and responsive */
-.hero {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  text-align: center;
+html {
+  scroll-behavior: smooth;
 }
 
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(217, 74, 56, 0.18), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.08), transparent 30%),
+    var(--bg);
+  color: var(--text);
+  font-family: "Outfit", sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+video {
+  max-width: 100%;
+}

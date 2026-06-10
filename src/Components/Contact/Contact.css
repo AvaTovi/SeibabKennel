@@ -1,24 +1,105 @@
 .contact-page {
-    padding-top: 100px;
-    padding-bottom: 200px;
-    color: white;
-    max-width: 600px;
-    margin: 0 auto;
-    margin-bottom: 25px;
-    background-color: black;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 5rem 1.25rem;
+}
+
+.contact-hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.contact-hero h1 {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.6rem, 6vw, 5rem);
+}
+
+.contact-hero p {
+  max-width: 680px;
+  margin: 1rem auto 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 1.5rem;
+}
+
+.contact-info-card,
+.contact-form {
+  border-radius: 30px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 2rem;
+}
+
+.contact-info-card h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 2.4rem;
+  margin: 0 0 0.5rem;
+}
+
+.contact-info-card p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.contact-info-list {
+  margin-top: 2rem;
+}
+
+.contact-info-list strong {
+  color: white;
+}
+
+.contact-form label {
+  display: block;
+  margin-bottom: 1.2rem;
+  font-weight: 700;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  margin-top: 0.45rem;
+  padding: 0.95rem 1rem;
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  background: rgba(0, 0, 0, 0.35);
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: var(--accent);
+}
+
+.contact-form button {
+  width: 100%;
+  border: none;
+  padding: 1rem 1.25rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: 180ms ease;
+}
+
+.contact-form button:hover {
+  background: var(--accent-dark);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 850px) {
+  .contact-layout {
+    grid-template-columns: 1fr;
   }
-  .contact-form label {
-    display: block;
-    margin-bottom: 1rem;
-  }
-  .contact-form input,
-  .contact-form textarea {
-    width: 100%;
-    padding: 0.5rem;
-    margin-top: 0.25rem;
-  }
-  .contact-form button {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-  }
-  
+}

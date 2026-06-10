@@ -8,17 +8,21 @@ import Contact from "./Components/Contact/Contact";
 import Footer from "./Components/Footer/Footer";
 import "./App.css";
 
-const App = () => (
-  <>
-    <Navbar />
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/available-puppies" element={<AvailablePuppies />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} />
-    </Routes>
-    <Footer />
-  </>
-);
+const App = () => {
+  return (
+    <div className="app">
+      <Navbar />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/available-puppies" element={<AvailablePuppies />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+
+      <Footer />
+    </div>
+  );
+};
 
 export default App;

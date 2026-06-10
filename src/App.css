@@ -1,12 +1,59 @@
-.heroData {
-    padding: 10;
-    margin-top: 10px;
-}
-
-body {
-    background-color: black;
-    margin: 0;
-    padding: 0;
+.app {
+    min-height: 100vh;
+    overflow-x: hidden;
   }
   
+  .page-section {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 4rem 1.25rem;
+  }
   
+  .section-title {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1;
+    margin: 0 0 1rem;
+  }
+  
+  .section-subtitle {
+    color: var(--muted);
+    font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 720px;
+  }
+  
+  .primary-button,
+  .secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 180ms ease, background 180ms ease, border 180ms ease;
+    cursor: pointer;
+  }
+  
+  .primary-button {
+    background: var(--accent);
+    color: white;
+    border: 1px solid var(--accent);
+  }
+  
+  .primary-button:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+  }
+  
+  .secondary-button {
+    border: 1px solid var(--card-border);
+    color: white;
+    background: rgba(255, 255, 255, 0.06);
+  }
+  
+  .secondary-button:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }

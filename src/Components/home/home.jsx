@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import "./home.css";
+
 import video1 from "../../assets/SK1.mp4";
 import dog1 from "../../assets/dog1.png";
 import dog2 from "../../assets/dog2.png";
@@ -14,66 +15,110 @@ import dog7 from "../../assets/seibab_dog3.jpg";
 import dog8 from "../../assets/seibab_dog4.jpg";
 
 const mediaItems = [
-  { type: "video", src: video1, title: "Seibab Walk" },
-  { type: "image", src: dog1, title: "Dog 1" },
-  { type: "image", src: dog2, title: "Dog 2" },
-  { type: "image", src: dog3, title: "Dog 3" },
-  { type: "image", src: dog4, title: "Dog 4" },
-  { type: "image", src: dog5, title: "Dog 5" },
-  { type: "image", src: dog6, title: "Dog 6" },
-  { type: "image", src: dog7, title: "Dog 7" },
-  { type: "image", src: dog8, title: "Dog 8" },
+  { type: "video", src: video1, title: "Seibab Kennel Walk" },
+  { type: "image", src: dog1, title: "XL Bully" },
+  { type: "image", src: dog2, title: "XL Bully" },
+  { type: "image", src: dog3, title: "XL Bully" },
+  { type: "image", src: dog4, title: "XL Bully" },
+  { type: "image", src: dog5, title: "XL Bully" },
+  { type: "image", src: dog6, title: "XL Bully" },
+  { type: "image", src: dog7, title: "XL Bully" },
+  { type: "image", src: dog8, title: "XL Bully" },
 ];
 
 export default function Home() {
   const [openIndex, setOpenIndex] = useState(-1);
 
-  // Build slides array for the Lightbox component
-  const slides = mediaItems.map((m) => ({
-    type: m.type,
-    src: m.src,
-    title: m.title,
+  const slides = mediaItems.map((item) => ({
+    type: item.type,
+    src: item.src,
+    title: item.title,
   }));
 
   return (
     <main className="home">
-        {/* above vid/pic container */}
-        <div className="above-pic-container">
-        <div className="text1">Welcome to Seibab Kennel!</div>
-        <div className="text2">Extreme / XL American Bully’s</div>
-        <div className="text3">
-          Discover our elite breeding program—where health, temperament,
-          and championship bloodlines come together to raise your next
-          loyal companion.
-        </div>
-        <Link to="/available-puppies" className="browse-button">Browse Available Puppies</Link>
-      </div>
-      {/* Video thumbnail */}
-      <div className="home-video-container">
-        <video
-          className="home-video"
-          src={video1}
-          autoPlay
-          loop
-          muted
-          onClick={() => setOpenIndex(0)}
-        />
-      </div>
+      <section className="hero-section">
+        <div className="hero-content">
+          <p className="eyebrow">Elite XL American Bullies</p>
 
-      {/* Gallery Thumbnails */}
-      <section className="home-gallery">
-        {mediaItems.slice(1).map((item, i) => (
-          <div
-            className="thumb"
-            key={i + 1}
-            onClick={() => setOpenIndex(i + 1)}
-          >
-            <img src={item.src} alt={item.title} />
+          <h1>
+            Welcome to <span>Seibab Kennel</span>
+          </h1>
+
+          <p className="hero-description">
+            Discover our elite breeding program where health, temperament, and
+            championship bloodlines come together to raise confident, loyal, and
+            family-ready companions.
+          </p>
+
+          <div className="hero-buttons">
+            <Link to="/available-puppies" className="primary-button">
+              Browse Available Puppies
+            </Link>
+
+            <Link to="/about" className="secondary-button">
+              Learn About Us
+            </Link>
           </div>
-        ))}
+        </div>
+
+        <div className="hero-video-card" onClick={() => setOpenIndex(0)}>
+          <video className="hero-video" src={video1} autoPlay loop muted playsInline />
+          <div className="video-badge">Watch Preview</div>
+        </div>
       </section>
 
-      {/* Lightbox */}
+      <section className="trust-section">
+        <div className="trust-card">
+          <h3>Health Focused</h3>
+          <p>Raised with care, structure, and attention to wellness.</p>
+        </div>
+
+        <div className="trust-card">
+          <h3>Family Temperament</h3>
+          <p>Confident, loyal, and socialized for loving homes.</p>
+        </div>
+
+        <div className="trust-card">
+          <h3>Quality Bloodlines</h3>
+          <p>Built around strong structure, presence, and breed standards.</p>
+        </div>
+      </section>
+
+      <section className="gallery-section">
+        <div className="section-heading">
+          <p className="eyebrow">Our Gallery</p>
+          <h2>Meet the Seibab Look</h2>
+          <p>
+            View our dogs and get a closer look at the strength, structure, and
+            confidence behind our kennel.
+          </p>
+        </div>
+
+        <div className="home-gallery">
+          {mediaItems.slice(1).map((item, index) => (
+            <button
+              className="thumb"
+              key={index + 1}
+              onClick={() => setOpenIndex(index + 1)}
+            >
+              <img src={item.src} alt={item.title} />
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="cta-section">
+        <h2>Ready to find your next companion?</h2>
+        <p>
+          Browse our available puppies or contact us to learn more about upcoming
+          litters.
+        </p>
+        <Link to="/available-puppies" className="primary-button">
+          Browse Puppies
+        </Link>
+      </section>
+
       {openIndex >= 0 && (
         <Lightbox
           open={true}
@@ -86,6 +131,7 @@ export default function Home() {
                 <video
                   src={slide.src}
                   controls
+                  autoPlay
                   style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
               ) : (
@@ -98,12 +144,6 @@ export default function Home() {
           }}
         />
       )}
-
-      {/* below vid/pic container */}
-      <div className="below-pic-container">
-        <div className="text4">Ready to Browse Puppies?</div>
-        <Link to="/available-puppies" className="browse-button2">Browse Available Puppies</Link>
-      </div>
     </main>
   );
 }
