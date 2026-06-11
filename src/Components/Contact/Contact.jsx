@@ -1,29 +1,32 @@
 import React, { useRef } from "react";
-import emailjs from "@emailjs/browser";
+import { supabase } from "../../supabaseClient";
 import "./Contact.css";
 
 const Contact = () => {
   const form = useRef();
 
-  const sendEmail = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
 
-    emailjs
-      .sendForm(
-        "your_service_id",
-        "your_template_id",
-        form.current,
-        "your_public_key"
-      )
-      .then(
-        () => {
-          alert("Message sent!");
-        },
-        () => {
-          alert("Failed to send message.");
-        }
-      );
+    const name = e.target.user_name.value;
+    const email = e.target.user_email.value;
+    const message = e.target.message.value;
 
+    const { error } = await supabase.from("Messages").insert([
+      {
+        name,
+        email,
+        message,
+        status: "New",
+      },
+    ]);
+
+    if (error) {
+      alert("Message failed to send.");
+      return;
+    }
+
+    alert("Message sent successfully!");
     e.target.reset();
   };
 
@@ -33,8 +36,8 @@ const Contact = () => {
         <p className="eyebrow">Contact Us</p>
         <h1>Let’s Talk Puppies</h1>
         <p>
-          Have questions about available puppies, upcoming litters, pricing, or
-          the process? Send us a message and we’ll get back to you.
+          Have questions about available puppies, studs, upcoming litters,
+          pricing, or the process? Send us a message and we’ll get back to you.
         </p>
       </section>
 
@@ -56,7 +59,7 @@ const Contact = () => {
           </div>
         </div>
 
-        <form className="contact-form" ref={form} onSubmit={sendEmail}>
+        <form className="contact-form" ref={form} onSubmit={sendMessage}>
           <label>
             Name
             <input type="text" name="user_name" placeholder="Your Name" required />
@@ -77,7 +80,7 @@ const Contact = () => {
             <textarea
               name="message"
               rows="6"
-              placeholder="Tell us what puppy or information you are interested in..."
+              placeholder="Tell us what puppy, stud, or information you are interested in..."
               required
             />
           </label>

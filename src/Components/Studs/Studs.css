@@ -1,0 +1,239 @@
+.studs-page {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 5rem 1.25rem;
+  }
+  
+  .studs-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .studs-hero h1 {
+    margin: 0;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 1;
+  }
+  
+  .studs-hero p {
+    max-width: 740px;
+    margin: 1rem auto 0;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  
+  .stud-info-banner {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    border-radius: 30px;
+    background:
+      linear-gradient(135deg, rgba(217, 74, 56, 0.22), rgba(255, 255, 255, 0.05)),
+      var(--card);
+    border: 1px solid var(--card-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .stud-info-banner h2 {
+    margin: 0 0 0.5rem;
+    font-family: "Playfair Display", serif;
+    font-size: 2.2rem;
+  }
+  
+  .stud-info-banner p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  
+  .studs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  
+  .stud-card {
+    text-align: left;
+    color: white;
+    border: 1px solid var(--card-border);
+    border-radius: 28px;
+    background: var(--card);
+    overflow: hidden;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 220ms ease, box-shadow 220ms ease, border 220ms ease;
+  }
+  
+  .stud-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(217, 74, 56, 0.7);
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.4);
+  }
+  
+  .stud-image-wrap {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+  }
+  
+  .stud-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 350ms ease;
+  }
+  
+  .stud-card:hover .stud-image-wrap img {
+    transform: scale(1.07);
+  }
+  
+  .stud-image-wrap span {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--card-border);
+    font-weight: 800;
+    font-size: 0.85rem;
+  }
+  
+  .stud-card-content {
+    padding: 1.4rem;
+  }
+  
+  .stud-card-content h3 {
+    margin: 0;
+    font-size: 1.55rem;
+  }
+  
+  .stud-bloodline {
+    color: var(--accent);
+    font-weight: 800;
+    margin: 0.35rem 0 0.75rem;
+  }
+  
+  .stud-description {
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+  }
+  
+  .stud-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .stud-traits span {
+    padding: 0.45rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--card-border);
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  
+  .stud-fee {
+    margin: 0;
+    color: white;
+    font-weight: 900;
+  }
+  
+  .stud-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    z-index: 1000;
+  }
+  
+  .stud-modal {
+    width: min(900px, 95vw);
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: 34px;
+    background: #111;
+    border: 1px solid var(--card-border);
+    position: relative;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
+  }
+  
+  .stud-modal img {
+    width: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .stud-modal-content {
+    padding: 2rem;
+  }
+  
+  .stud-modal-content h2 {
+    margin: 0 0 1rem;
+    font-family: "Playfair Display", serif;
+    font-size: 3rem;
+  }
+  
+  .stud-modal-content p {
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  
+  .stud-modal-details {
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--card-border);
+  }
+  
+  .stud-modal-details strong {
+    color: white;
+  }
+  
+  .stud-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--card-border);
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    z-index: 2;
+  }
+  
+  @media (max-width: 950px) {
+    .studs-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  
+    .stud-info-banner {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+  
+  @media (max-width: 620px) {
+    .studs-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .stud-modal-content h2 {
+      font-size: 2.3rem;
+    }
+  }

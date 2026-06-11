@@ -20,6 +20,10 @@ const Footer = () => {
             Available Puppies
           </Link>
 
+          <Link to="/studs" className="footer-link">
+            Studs
+          </Link>
+
           <Link to="/about" className="footer-link">
             About
           </Link>

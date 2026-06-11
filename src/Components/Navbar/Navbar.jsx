@@ -23,6 +23,10 @@ const Navbar = () => {
           Available Puppies
         </NavLink>
 
+        <NavLink to="/studs" className="nav-link">
+          Studs
+        </NavLink>
+
         <NavLink to="/about" className="nav-link">
           About
         </NavLink>

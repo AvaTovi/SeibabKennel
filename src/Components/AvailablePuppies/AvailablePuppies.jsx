@@ -1,54 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "../../supabaseClient";
 import "./AvailablePuppies.css";
-
-import dog1 from "../../assets/dog1.png";
-import dog2 from "../../assets/dog2.png";
-import dog3 from "../../assets/dog3.png";
-import dog4 from "../../assets/dog4.jpg";
-
-const puppies = [
-  {
-    id: 1,
-    name: "Bella",
-    src: dog1,
-    desc: "Fawn female with a smooth coat, strong structure, and confident personality.",
-    price: "$2,500",
-  },
-  {
-    id: 2,
-    name: "Max",
-    src: dog2,
-    desc: "Blue brindle male with XL build, great presence, and outstanding temperament.",
-    price: "$2,800",
-  },
-  {
-    id: 3,
-    name: "Luna",
-    src: dog3,
-    desc: "Lilac female, friendly, playful, and raised with close daily care.",
-    price: "$3,100",
-  },
-  {
-    id: 4,
-    name: "Rocky",
-    src: dog4,
-    desc: "Fawn male with a social personality, clean structure, and family-ready attitude.",
-    price: "$2,700",
-  },
-];
 
 export default function AvailablePuppies() {
   const [selected, setSelected] = useState(null);
+  const [puppies, setPuppies] = useState([]);
+
+  useEffect(() => {
+    fetchPuppies();
+  }, []);
+
+  const fetchPuppies = async () => {
+    const { data, error } = await supabase
+      .from("Puppies")
+      .select("*")
+      .order("id", { ascending: false });
+
+    if (!error) setPuppies(data || []);
+  };
 
   return (
     <main className="available-page">
       <section className="available-hero">
         <p className="eyebrow">Available Puppies</p>
         <h1>Find Your Next XL Bully</h1>
-        <p>
-          Browse our currently available puppies. Click any card to view a larger
-          image and details.
-        </p>
+        <p>Browse our current puppies and contact us for more details.</p>
       </section>
 
       <section className="puppy-grid">
@@ -58,10 +34,13 @@ export default function AvailablePuppies() {
             className="puppy-card"
             onClick={() => setSelected(puppy)}
           >
-            <img src={puppy.src} alt={puppy.name} />
+            <img src={puppy.image_url} alt={puppy.name} />
+
             <div className="puppy-card-content">
+              <span className="status-label">{puppy.status}</span>
               <h3>{puppy.name}</h3>
-              <p className="puppy-desc">{puppy.desc}</p>
+              <p>{puppy.gender}</p>
+              <p className="puppy-desc">{puppy.description}</p>
               <p className="puppy-price">{puppy.price}</p>
             </div>
           </button>
@@ -75,9 +54,10 @@ export default function AvailablePuppies() {
               ×
             </button>
 
-            <img src={selected.src} alt={selected.name} />
+            <img src={selected.image_url} alt={selected.name} />
             <h3>{selected.name}</h3>
-            <p>{selected.desc}</p>
+            <p>{selected.gender}</p>
+            <p>{selected.description}</p>
             <p className="puppy-price">{selected.price}</p>
           </div>
         </div>
