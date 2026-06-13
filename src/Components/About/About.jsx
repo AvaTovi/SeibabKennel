@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "../../assets/logo1.jpg";
+import Reviews from "../Reviews/Reviews";
 import "./About.css";
 
 export default function About() {
@@ -31,6 +32,8 @@ export default function About() {
           </p>
         </div>
       </section>
+
+      <Reviews />
     </main>
   );
 }

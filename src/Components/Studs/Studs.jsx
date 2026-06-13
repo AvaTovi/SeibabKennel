@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import "./Studs.css";
+import Reviews from "../Reviews/Reviews";
 
 export default function Studs() {
   const [studs, setStuds] = useState([]);
@@ -136,6 +137,8 @@ ${interestForm.message}
           ))}
         </section>
       )}
+
+    <Reviews />
 
       {selectedStud && (
         <div className="stud-modal-overlay" onClick={closeStud}>

@@ -12,6 +12,7 @@ const Admin = () => {
   const [messages, setMessages] = useState([]);
   const [puppies, setPuppies] = useState([]);
   const [studs, setStuds] = useState([]);
+  const [reviews, setReviews] = useState([]);
 
   const [puppyForm, setPuppyForm] = useState({
     name: "",
@@ -43,6 +44,7 @@ const Admin = () => {
     fetchMessages();
     fetchPuppies();
     fetchStuds();
+    fetchReviews();
   }, []);
 
   const fetchMessages = async () => {
@@ -70,6 +72,42 @@ const Admin = () => {
       .order("id", { ascending: false });
 
     if (!error) setStuds(data || []);
+  };
+
+  const fetchReviews = async () => {
+    const { data, error } = await supabase
+      .from("Reviews")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error) setReviews(data || []);
+  };
+
+  const approveReview = async (id, approved) => {
+    const { error } = await supabase
+      .from("Reviews")
+      .update({ approved })
+      .eq("id", id);
+
+    if (error) {
+      alert(`Review update failed: ${error.message}`);
+      return;
+    }
+
+    fetchReviews();
+  };
+
+  const deleteReview = async (id) => {
+    if (!window.confirm("Delete this review?")) return;
+
+    const { error } = await supabase.from("Reviews").delete().eq("id", id);
+
+    if (error) {
+      alert(`Review delete failed: ${error.message}`);
+      return;
+    }
+
+    fetchReviews();
   };
 
   const uploadFile = async (file, folder) => {
@@ -144,6 +182,7 @@ const Admin = () => {
     e.preventDefault();
 
     const imageUrl = await uploadFile(puppyForm.imageFile, "puppies/main");
+
     if (!imageUrl) {
       alert("Please upload a main puppy image.");
       return;
@@ -257,6 +296,7 @@ const Admin = () => {
     e.preventDefault();
 
     const imageUrl = await uploadFile(studForm.imageFile, "studs/main");
+
     if (!imageUrl) {
       alert("Please upload a main stud image.");
       return;
@@ -267,7 +307,10 @@ const Admin = () => {
       "studs/gallery"
     );
 
-    const pedigreeUrl = await uploadFile(studForm.pedigreeFile, "studs/pedigrees");
+    const pedigreeUrl = await uploadFile(
+      studForm.pedigreeFile,
+      "studs/pedigrees"
+    );
 
     const { error } = await supabase.from("Studs").insert([
       {
@@ -367,7 +410,7 @@ const Admin = () => {
         <form className="admin-login-card" onSubmit={handleLogin}>
           <p className="eyebrow">Admin Login</p>
           <h1>Seibab Kennel Admin</h1>
-          <p>Manage messages, puppies, studs, and website information.</p>
+          <p>Manage messages, puppies, studs, reviews, and website information.</p>
 
           <input
             type="password"
@@ -403,17 +446,20 @@ const Admin = () => {
           <h3>Messages</h3>
           <p>{messages.length}</p>
         </div>
+
         <div>
           <h3>Puppies</h3>
           <p>{puppies.length}</p>
         </div>
+
         <div>
           <h3>Studs</h3>
           <p>{studs.length}</p>
         </div>
+
         <div>
-          <h3>Resolved</h3>
-          <p>{messages.filter((m) => m.status === "Resolved").length}</p>
+          <h3>Reviews</h3>
+          <p>{reviews.length}</p>
         </div>
       </section>
 
@@ -438,6 +484,13 @@ const Admin = () => {
         >
           Studs
         </button>
+
+        <button
+          className={activeTab === "reviews" ? "active" : ""}
+          onClick={() => setActiveTab("reviews")}
+        >
+          Reviews
+        </button>
       </nav>
 
       {activeTab === "messages" && (
@@ -458,6 +511,7 @@ const Admin = () => {
                     <p>{msg.email}</p>
                     <small>{new Date(msg.created_at).toLocaleString()}</small>
                   </div>
+
                   <span className="status-pill">{msg.status}</span>
                 </div>
 
@@ -475,7 +529,9 @@ const Admin = () => {
                     Mark New
                   </button>
 
-                  <button onClick={() => updateMessageStatus(msg.id, "In Progress")}>
+                  <button
+                    onClick={() => updateMessageStatus(msg.id, "In Progress")}
+                  >
                     In Progress
                   </button>
 
@@ -485,6 +541,71 @@ const Admin = () => {
 
                   <button className="danger" onClick={() => deleteMessage(msg.id)}>
                     Delete
+                  </button>
+                </div>
+              </article>
+            ))
+          )}
+        </section>
+      )}
+
+      {activeTab === "reviews" && (
+        <section className="admin-panel">
+          <h2>Customer Reviews</h2>
+
+          {reviews.length === 0 ? (
+            <div className="empty-box">
+              <h3>No reviews yet</h3>
+              <p>Customer reviews and feedback will appear here.</p>
+            </div>
+          ) : (
+            reviews.map((review) => (
+              <article className="admin-card" key={review.id}>
+                <div className="card-top">
+                  <div>
+                    <h3>{review.name}</h3>
+                    <p>{review.email}</p>
+                    <small>{new Date(review.created_at).toLocaleString()}</small>
+                  </div>
+
+                  <span className="status-pill">
+                    {review.rating} Star{review.rating > 1 ? "s" : ""}
+                  </span>
+                </div>
+
+                {review.image_url && (
+                  <img
+                    className="admin-preview-img"
+                    src={review.image_url}
+                    alt={review.name}
+                  />
+                )}
+
+                <div className="message-box">{review.review}</div>
+
+                <p>
+                  <strong>Status:</strong>{" "}
+                  {review.approved ? "Featured on website" : "Admin only"}
+                </p>
+
+                <div className="action-row">
+                  {review.rating === 5 && (
+                    <>
+                      <button onClick={() => approveReview(review.id, true)}>
+                        Feature Review
+                      </button>
+
+                      <button onClick={() => approveReview(review.id, false)}>
+                        Hide Review
+                      </button>
+                    </>
+                  )}
+
+                  <button
+                    className="danger"
+                    onClick={() => deleteReview(review.id)}
+                  >
+                    Delete Review
                   </button>
                 </div>
               </article>
@@ -518,7 +639,7 @@ const Admin = () => {
             />
 
             <label className="admin-file-label">
-              Extra Gallery Images: front, side, stack, etc.
+              Extra Gallery Images: hold Command ⌘ and click multiple photos
             </label>
             <input
               type="file"
@@ -609,7 +730,11 @@ const Admin = () => {
           {puppies.map((p) => (
             <article className="admin-card edit-card" key={p.id}>
               {p.image_url && (
-                <img className="admin-preview-img" src={p.image_url} alt={p.name} />
+                <img
+                  className="admin-preview-img"
+                  src={p.image_url}
+                  alt={p.name}
+                />
               )}
 
               <label className="admin-file-label">Change Main Image</label>
@@ -821,7 +946,11 @@ const Admin = () => {
           {studs.map((s) => (
             <article className="admin-card edit-card" key={s.id}>
               {s.image_url && (
-                <img className="admin-preview-img" src={s.image_url} alt={s.name} />
+                <img
+                  className="admin-preview-img"
+                  src={s.image_url}
+                  alt={s.name}
+                />
               )}
 
               <label className="admin-file-label">Change Main Image</label>

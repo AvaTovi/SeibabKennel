@@ -64,11 +64,36 @@
   box-shadow: 0 22px 55px rgba(0, 0, 0, 0.4);
 }
 
+.puppy-image-wrap {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+}
+
+.puppy-image-wrap img,
 .puppy-card img {
   width: 100%;
-  height: 240px;
+  height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.featured-badge,
+.sold-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  font-weight: 900;
+  font-size: 0.85rem;
+}
+
+.sold-badge {
+  background: rgba(0, 0, 0, 0.76);
+  border: 1px solid var(--card-border);
 }
 
 .puppy-card-content {
@@ -114,6 +139,30 @@
   margin: 0;
 }
 
+.sold-gallery-section {
+  margin-top: 5rem;
+}
+
+.sold-gallery-heading {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.sold-gallery-heading h2 {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+}
+
+.sold-gallery-heading p {
+  color: var(--muted);
+  margin: 0.75rem auto 0;
+}
+
+.sold-card {
+  opacity: 0.78;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -152,13 +201,39 @@
   min-height: 100%;
 }
 
-.interest-image-panel img {
+.puppy-modal-images > img {
   width: 100%;
-  height: 100%;
-  min-height: 620px;
+  height: 620px;
   object-fit: cover;
   border-radius: 26px;
   border: 1px solid var(--card-border);
+  display: block;
+}
+
+.puppy-thumb-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.puppy-thumb-row button {
+  padding: 0;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  background: transparent;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.puppy-thumb-row button.active {
+  border-color: var(--accent);
+}
+
+.puppy-thumb-row img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
   display: block;
 }
 
@@ -168,8 +243,28 @@
   flex-direction: column;
 }
 
-.modal-status {
+.modal-badge-row {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
   margin-bottom: 1rem;
+}
+
+.modal-status {
+  margin-bottom: 0;
+}
+
+.featured-pill {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 900;
 }
 
 .interest-details-panel h3 {
@@ -200,12 +295,6 @@
   font-weight: 900;
 }
 
-.modal-description {
-  margin: 0 0 1.5rem;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
 .modal-description-section {
   margin: 1.5rem 0;
 }
@@ -213,7 +302,7 @@
 .modal-description-section h4 {
   margin: 0 0 0.75rem;
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: 900;
   color: white;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -225,7 +314,20 @@
   line-height: 1.7;
 }
 
-.interest-box {
+.pedigree-button {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.interest-box,
+.sold-message-box {
   margin-top: auto;
   padding: 1.5rem;
   border-radius: 28px;
@@ -233,12 +335,14 @@
   border: 1px solid var(--card-border);
 }
 
-.interest-box h4 {
+.interest-box h4,
+.sold-message-box h4 {
   margin: 0 0 0.6rem;
   font-size: 1.6rem;
 }
 
-.interest-box p {
+.interest-box p,
+.sold-message-box p {
   margin: 0 0 1.25rem;
   color: var(--muted);
   line-height: 1.6;
@@ -326,8 +430,8 @@
     grid-template-columns: 1fr;
   }
 
-  .interest-image-panel img {
-    min-height: unset;
+  .puppy-modal-images > img {
+    height: auto;
     max-height: 430px;
   }
 }
@@ -347,7 +451,8 @@
     padding: 3rem 1rem;
   }
 
-  .puppy-grid {
+  .puppy-grid,
+  .puppy-thumb-row {
     grid-template-columns: 1fr;
   }
 
@@ -355,7 +460,8 @@
     padding: 0.25rem;
   }
 
-  .interest-box {
+  .interest-box,
+  .sold-message-box {
     padding: 1.25rem;
   }
 

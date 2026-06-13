@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import "./AvailablePuppies.css";
+import Reviews from "../Reviews/Reviews";
 
 export default function AvailablePuppies() {
   const [selected, setSelected] = useState(null);
+  const [activeImage, setActiveImage] = useState("");
   const [puppies, setPuppies] = useState([]);
   const [interestForm, setInterestForm] = useState({
     name: "",
@@ -20,6 +22,7 @@ export default function AvailablePuppies() {
     const { data, error } = await supabase
       .from("Puppies")
       .select("*")
+      .order("featured", { ascending: false })
       .order("id", { ascending: false });
 
     if (!error) {
@@ -27,8 +30,23 @@ export default function AvailablePuppies() {
     }
   };
 
+  const openPuppy = async (puppy) => {
+    setSelected(puppy);
+    setActiveImage(puppy.image_url);
+
+    await supabase.from("Analytics").insert([
+      {
+        item_type: "puppy",
+        item_id: puppy.id,
+        item_name: puppy.name,
+        action: "view",
+      },
+    ]);
+  };
+
   const closeModal = () => {
     setSelected(null);
+    setActiveImage("");
     setInterestForm({
       name: "",
       email: "",
@@ -68,9 +86,21 @@ ${interestForm.message}
       return;
     }
 
+    await supabase.from("Analytics").insert([
+      {
+        item_type: "puppy",
+        item_id: selected.id,
+        item_name: selected.name,
+        action: "inquiry",
+      },
+    ]);
+
     alert("Your interest was sent successfully!");
     closeModal();
   };
+
+  const availablePuppies = puppies.filter((puppy) => !puppy.sold);
+  const soldPuppies = puppies.filter((puppy) => puppy.sold);
 
   return (
     <main className="available-page">
@@ -80,20 +110,26 @@ ${interestForm.message}
         <p>Browse our current puppies and contact us for more details.</p>
       </section>
 
-      {puppies.length === 0 ? (
+      {availablePuppies.length === 0 ? (
         <section className="no-puppies-box">
           <h2>No puppies listed right now</h2>
           <p>Please check back soon or contact us about upcoming litters.</p>
         </section>
       ) : (
         <section className="puppy-grid">
-          {puppies.map((puppy) => (
+          {availablePuppies.map((puppy) => (
             <button
               key={puppy.id}
               className="puppy-card"
-              onClick={() => setSelected(puppy)}
+              onClick={() => openPuppy(puppy)}
             >
-              <img src={puppy.image_url} alt={puppy.name} />
+              <div className="puppy-image-wrap">
+                <img src={puppy.image_url} alt={puppy.name} />
+
+                {puppy.featured && (
+                  <span className="featured-badge">Featured</span>
+                )}
+              </div>
 
               <div className="puppy-card-content">
                 <span className="status-label">{puppy.status}</span>
@@ -107,6 +143,39 @@ ${interestForm.message}
         </section>
       )}
 
+      {soldPuppies.length > 0 && (
+        <section className="sold-gallery-section">
+          <div className="sold-gallery-heading">
+            <p className="eyebrow">Past Puppies</p>
+            <h2>Sold Puppy Gallery</h2>
+            <p>A look at puppies that have already found their homes.</p>
+          </div>
+
+          <section className="puppy-grid">
+            {soldPuppies.map((puppy) => (
+              <button
+                key={puppy.id}
+                className="puppy-card sold-card"
+                onClick={() => openPuppy(puppy)}
+              >
+                <div className="puppy-image-wrap">
+                  <img src={puppy.image_url} alt={puppy.name} />
+                  <span className="sold-badge">Sold</span>
+                </div>
+
+                <div className="puppy-card-content">
+                  <h3>{puppy.name}</h3>
+                  <p className="puppy-gender">{puppy.gender}</p>
+                  <p className="puppy-desc">{puppy.description}</p>
+                </div>
+              </button>
+            ))}
+          </section>
+        </section>
+      )}
+
+      <Reviews />
+      
       {selected && (
         <div className="modal-overlay" onClick={closeModal}>
           <div
@@ -119,13 +188,36 @@ ${interestForm.message}
 
             <div className="interest-modal-grid">
               <div className="interest-image-panel">
-                <img src={selected.image_url} alt={selected.name} />
+                <div className="puppy-modal-images">
+                  <img src={activeImage} alt={selected.name} />
+
+                  <div className="puppy-thumb-row">
+                    {[selected.image_url, ...(selected.gallery_urls || [])].map(
+                      (url) => (
+                        <button
+                          key={url}
+                          type="button"
+                          className={activeImage === url ? "active" : ""}
+                          onClick={() => setActiveImage(url)}
+                        >
+                          <img src={url} alt="Puppy thumbnail" />
+                        </button>
+                      )
+                    )}
+                  </div>
+                </div>
               </div>
 
               <div className="interest-details-panel">
-                <span className="status-label modal-status">
-                  {selected.status}
-                </span>
+                <div className="modal-badge-row">
+                  <span className="status-label modal-status">
+                    {selected.sold ? "Sold" : selected.status}
+                  </span>
+
+                  {selected.featured && (
+                    <span className="featured-pill">Featured Puppy</span>
+                  )}
+                </div>
 
                 <h3>{selected.name}</h3>
 
@@ -144,67 +236,90 @@ ${interestForm.message}
                   <p className="modal-description">{selected.description}</p>
                 </div>
 
-                <div className="interest-box">
-                  <h4>Interested in {selected.name}?</h4>
-                  <p>
-                    Fill this out and the owner will receive your message in the
-                    admin dashboard.
-                  </p>
+                {selected.pedigree_url && (
+                  <a
+                    className="pedigree-button"
+                    href={selected.pedigree_url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View Pedigree PDF
+                  </a>
+                )}
 
-                  <form className="interest-form" onSubmit={submitInterest}>
-                    <input
-                      type="text"
-                      placeholder="Your Name"
-                      value={interestForm.name}
-                      onChange={(e) =>
-                        setInterestForm({
-                          ...interestForm,
-                          name: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                {!selected.sold && (
+                  <div className="interest-box">
+                    <h4>Interested in {selected.name}?</h4>
+                    <p>
+                      Fill this out and the owner will receive your message in
+                      the admin dashboard.
+                    </p>
 
-                    <input
-                      type="email"
-                      placeholder="Your Email"
-                      value={interestForm.email}
-                      onChange={(e) =>
-                        setInterestForm({
-                          ...interestForm,
-                          email: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <form className="interest-form" onSubmit={submitInterest}>
+                      <input
+                        type="text"
+                        placeholder="Your Name"
+                        value={interestForm.name}
+                        onChange={(e) =>
+                          setInterestForm({
+                            ...interestForm,
+                            name: e.target.value,
+                          })
+                        }
+                        required
+                      />
 
-                    <input
-                      type="tel"
-                      placeholder="Your Phone Number"
-                      value={interestForm.phone}
-                      onChange={(e) =>
-                        setInterestForm({
-                          ...interestForm,
-                          phone: e.target.value,
-                        })
-                      }
-                    />
+                      <input
+                        type="email"
+                        placeholder="Your Email"
+                        value={interestForm.email}
+                        onChange={(e) =>
+                          setInterestForm({
+                            ...interestForm,
+                            email: e.target.value,
+                          })
+                        }
+                        required
+                      />
 
-                    <textarea
-                      placeholder={`Hi, I am interested in ${selected.name}.`}
-                      value={interestForm.message}
-                      onChange={(e) =>
-                        setInterestForm({
-                          ...interestForm,
-                          message: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                      <input
+                        type="tel"
+                        placeholder="Your Phone Number"
+                        value={interestForm.phone}
+                        onChange={(e) =>
+                          setInterestForm({
+                            ...interestForm,
+                            phone: e.target.value,
+                          })
+                        }
+                      />
 
-                    <button type="submit">Send Puppy Interest</button>
-                  </form>
-                </div>
+                      <textarea
+                        placeholder={`Hi, I am interested in ${selected.name}.`}
+                        value={interestForm.message}
+                        onChange={(e) =>
+                          setInterestForm({
+                            ...interestForm,
+                            message: e.target.value,
+                          })
+                        }
+                        required
+                      />
+
+                      <button type="submit">Send Puppy Interest</button>
+                    </form>
+                  </div>
+                )}
+
+                {selected.sold && (
+                  <div className="sold-message-box">
+                    <h4>This puppy has been sold</h4>
+                    <p>
+                      Contact us about upcoming litters or other available
+                      puppies.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

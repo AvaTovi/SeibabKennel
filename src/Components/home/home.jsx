@@ -4,6 +4,8 @@ import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import "./home.css";
 
+import Reviews from "../Reviews/Reviews";
+
 import video1 from "../../assets/SK1.mp4";
 import dog1 from "../../assets/dog1.png";
 import dog2 from "../../assets/dog2.png";
@@ -118,6 +120,8 @@ export default function Home() {
           Browse Puppies
         </Link>
       </section>
+
+      <Reviews />
 
       {openIndex >= 0 && (
         <Lightbox

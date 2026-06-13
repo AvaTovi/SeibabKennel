@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { supabase } from "../../supabaseClient";
+import Reviews from "../Reviews/Reviews";
 import "./Contact.css";
 
 const Contact = () => {
@@ -88,6 +89,8 @@ const Contact = () => {
           <button type="submit">Send Message</button>
         </form>
       </section>
+
+      <Reviews />
     </main>
   );
 };
