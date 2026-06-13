@@ -20,6 +20,10 @@ const Admin = () => {
     status: "Available",
     description: "",
     imageFile: null,
+    galleryFiles: [],
+    pedigreeFile: null,
+    featured: false,
+    sold: false,
   });
 
   const [studForm, setStudForm] = useState({
@@ -29,6 +33,9 @@ const Admin = () => {
     bloodline: "",
     description: "",
     imageFile: null,
+    galleryFiles: [],
+    pedigreeFile: null,
+    featured: false,
   });
 
   useEffect(() => {
@@ -65,13 +72,9 @@ const Admin = () => {
     if (!error) setStuds(data || []);
   };
 
-  const uploadImage = async (file, folder) => {
-    if (!file) {
-      alert("Please choose an image.");
-      return null;
-    }
+  const uploadFile = async (file, folder) => {
+    if (!file) return null;
 
-    const fileExt = file.name.split(".").pop();
     const cleanFileName = file.name
       .replace(/\s+/g, "-")
       .replace(/[^a-zA-Z0-9.-]/g, "");
@@ -87,8 +90,7 @@ const Admin = () => {
       });
 
     if (error) {
-      console.error("Image upload error:", error);
-      alert(`Image upload failed: ${error.message}`);
+      alert(`Upload failed: ${error.message}`);
       return null;
     }
 
@@ -96,12 +98,18 @@ const Admin = () => {
       .from("kennel-images")
       .getPublicUrl(data.path);
 
-    if (!publicUrlData.publicUrl) {
-      alert("Could not create image URL.");
-      return null;
+    return publicUrlData.publicUrl;
+  };
+
+  const uploadMultipleFiles = async (files, folder) => {
+    const urls = [];
+
+    for (const file of files) {
+      const url = await uploadFile(file, folder);
+      if (url) urls.push(url);
     }
 
-    return publicUrlData.publicUrl;
+    return urls;
   };
 
   const handleLogin = (e) => {
@@ -128,7 +136,6 @@ const Admin = () => {
 
   const deleteMessage = async (id) => {
     if (!window.confirm("Delete this message?")) return;
-
     await supabase.from("Messages").delete().eq("id", id);
     fetchMessages();
   };
@@ -136,12 +143,21 @@ const Admin = () => {
   const addPuppy = async (e) => {
     e.preventDefault();
 
-    const imageUrl = await uploadImage(puppyForm.imageFile, "puppies");
-
+    const imageUrl = await uploadFile(puppyForm.imageFile, "puppies/main");
     if (!imageUrl) {
-      alert("Puppy was not added because the image did not upload.");
+      alert("Please upload a main puppy image.");
       return;
     }
+
+    const galleryUrls = await uploadMultipleFiles(
+      puppyForm.galleryFiles,
+      "puppies/gallery"
+    );
+
+    const pedigreeUrl = await uploadFile(
+      puppyForm.pedigreeFile,
+      "puppies/pedigrees"
+    );
 
     const { error } = await supabase.from("Puppies").insert([
       {
@@ -151,11 +167,14 @@ const Admin = () => {
         price: puppyForm.price,
         status: puppyForm.status,
         description: puppyForm.description,
+        gallery_urls: galleryUrls,
+        pedigree_url: pedigreeUrl,
+        featured: puppyForm.featured,
+        sold: puppyForm.sold,
       },
     ]);
 
     if (error) {
-      console.error("Puppy insert error:", error);
       alert(`Failed to add puppy: ${error.message}`);
       return;
     }
@@ -169,6 +188,10 @@ const Admin = () => {
       status: "Available",
       description: "",
       imageFile: null,
+      galleryFiles: [],
+      pedigreeFile: null,
+      featured: false,
+      sold: false,
     });
 
     fetchPuppies();
@@ -188,28 +211,63 @@ const Admin = () => {
     fetchPuppies();
   };
 
+  const updatePuppyMainImage = async (id, file) => {
+    const imageUrl = await uploadFile(file, "puppies/main");
+    if (!imageUrl) return;
+    await updatePuppy(id, "image_url", imageUrl);
+  };
+
+  const addPuppyGalleryImages = async (puppy) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.multiple = true;
+
+    input.onchange = async (e) => {
+      const files = Array.from(e.target.files);
+      const newUrls = await uploadMultipleFiles(files, "puppies/gallery");
+      const currentUrls = puppy.gallery_urls || [];
+      await updatePuppy(puppy.id, "gallery_urls", [...currentUrls, ...newUrls]);
+    };
+
+    input.click();
+  };
+
+  const removePuppyGalleryImage = async (puppy, urlToRemove) => {
+    const updatedGallery = (puppy.gallery_urls || []).filter(
+      (url) => url !== urlToRemove
+    );
+
+    await updatePuppy(puppy.id, "gallery_urls", updatedGallery);
+  };
+
+  const updatePuppyPedigree = async (id, file) => {
+    const pedigreeUrl = await uploadFile(file, "puppies/pedigrees");
+    if (!pedigreeUrl) return;
+    await updatePuppy(id, "pedigree_url", pedigreeUrl);
+  };
+
   const deletePuppy = async (id) => {
     if (!window.confirm("Delete this puppy?")) return;
-
-    const { error } = await supabase.from("Puppies").delete().eq("id", id);
-
-    if (error) {
-      alert(`Delete failed: ${error.message}`);
-      return;
-    }
-
+    await supabase.from("Puppies").delete().eq("id", id);
     fetchPuppies();
   };
 
   const addStud = async (e) => {
     e.preventDefault();
 
-    const imageUrl = await uploadImage(studForm.imageFile, "studs");
-
+    const imageUrl = await uploadFile(studForm.imageFile, "studs/main");
     if (!imageUrl) {
-      alert("Stud was not added because the image did not upload.");
+      alert("Please upload a main stud image.");
       return;
     }
+
+    const galleryUrls = await uploadMultipleFiles(
+      studForm.galleryFiles,
+      "studs/gallery"
+    );
+
+    const pedigreeUrl = await uploadFile(studForm.pedigreeFile, "studs/pedigrees");
 
     const { error } = await supabase.from("Studs").insert([
       {
@@ -219,11 +277,13 @@ const Admin = () => {
         status: studForm.status,
         bloodline: studForm.bloodline,
         description: studForm.description,
+        gallery_urls: galleryUrls,
+        pedigree_url: pedigreeUrl,
+        featured: studForm.featured,
       },
     ]);
 
     if (error) {
-      console.error("Stud insert error:", error);
       alert(`Failed to add stud: ${error.message}`);
       return;
     }
@@ -237,6 +297,9 @@ const Admin = () => {
       bloodline: "",
       description: "",
       imageFile: null,
+      galleryFiles: [],
+      pedigreeFile: null,
+      featured: false,
     });
 
     fetchStuds();
@@ -256,16 +319,45 @@ const Admin = () => {
     fetchStuds();
   };
 
+  const updateStudMainImage = async (id, file) => {
+    const imageUrl = await uploadFile(file, "studs/main");
+    if (!imageUrl) return;
+    await updateStud(id, "image_url", imageUrl);
+  };
+
+  const addStudGalleryImages = async (stud) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.multiple = true;
+
+    input.onchange = async (e) => {
+      const files = Array.from(e.target.files);
+      const newUrls = await uploadMultipleFiles(files, "studs/gallery");
+      const currentUrls = stud.gallery_urls || [];
+      await updateStud(stud.id, "gallery_urls", [...currentUrls, ...newUrls]);
+    };
+
+    input.click();
+  };
+
+  const removeStudGalleryImage = async (stud, urlToRemove) => {
+    const updatedGallery = (stud.gallery_urls || []).filter(
+      (url) => url !== urlToRemove
+    );
+
+    await updateStud(stud.id, "gallery_urls", updatedGallery);
+  };
+
+  const updateStudPedigree = async (id, file) => {
+    const pedigreeUrl = await uploadFile(file, "studs/pedigrees");
+    if (!pedigreeUrl) return;
+    await updateStud(id, "pedigree_url", pedigreeUrl);
+  };
+
   const deleteStud = async (id) => {
     if (!window.confirm("Delete this stud?")) return;
-
-    const { error } = await supabase.from("Studs").delete().eq("id", id);
-
-    if (error) {
-      alert(`Delete failed: ${error.message}`);
-      return;
-    }
-
+    await supabase.from("Studs").delete().eq("id", id);
     fetchStuds();
   };
 
@@ -372,6 +464,13 @@ const Admin = () => {
                 <div className="message-box">{msg.message}</div>
 
                 <div className="action-row">
+                  <a
+                    className="email-customer-button"
+                    href={`mailto:${msg.email}?subject=Seibab Kennel Inquiry&body=Hi ${msg.name},%0D%0A%0D%0AThank you for reaching out to Seibab Kennel.%0D%0A%0D%0A`}
+                  >
+                    Email Customer
+                  </a>
+
                   <button onClick={() => updateMessageStatus(msg.id, "New")}>
                     Mark New
                   </button>
@@ -408,6 +507,7 @@ const Admin = () => {
               required
             />
 
+            <label className="admin-file-label">Main Puppy Image</label>
             <input
               type="file"
               accept="image/*"
@@ -415,6 +515,30 @@ const Admin = () => {
                 setPuppyForm({ ...puppyForm, imageFile: e.target.files[0] })
               }
               required
+            />
+
+            <label className="admin-file-label">
+              Extra Gallery Images: front, side, stack, etc.
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) =>
+                setPuppyForm({
+                  ...puppyForm,
+                  galleryFiles: Array.from(e.target.files),
+                })
+              }
+            />
+
+            <label className="admin-file-label">Pedigree PDF</label>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(e) =>
+                setPuppyForm({ ...puppyForm, pedigreeFile: e.target.files[0] })
+              }
             />
 
             <input
@@ -455,6 +579,30 @@ const Admin = () => {
               required
             />
 
+            <div className="admin-check-row">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={puppyForm.featured}
+                  onChange={(e) =>
+                    setPuppyForm({ ...puppyForm, featured: e.target.checked })
+                  }
+                />
+                Featured Puppy
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  checked={puppyForm.sold}
+                  onChange={(e) =>
+                    setPuppyForm({ ...puppyForm, sold: e.target.checked })
+                  }
+                />
+                Sold Puppy
+              </label>
+            </div>
+
             <button type="submit">Add Puppy</button>
           </form>
 
@@ -463,6 +611,13 @@ const Admin = () => {
               {p.image_url && (
                 <img className="admin-preview-img" src={p.image_url} alt={p.name} />
               )}
+
+              <label className="admin-file-label">Change Main Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => updatePuppyMainImage(p.id, e.target.files[0])}
+              />
 
               <input
                 value={p.name || ""}
@@ -490,10 +645,72 @@ const Admin = () => {
 
               <textarea
                 value={p.description || ""}
-                onChange={(e) =>
-                  updatePuppy(p.id, "description", e.target.value)
-                }
+                onChange={(e) => updatePuppy(p.id, "description", e.target.value)}
               />
+
+              <div className="admin-check-row">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={!!p.featured}
+                    onChange={(e) =>
+                      updatePuppy(p.id, "featured", e.target.checked)
+                    }
+                  />
+                  Featured
+                </label>
+
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={!!p.sold}
+                    onChange={(e) => updatePuppy(p.id, "sold", e.target.checked)}
+                  />
+                  Sold
+                </label>
+              </div>
+
+              <div className="admin-gallery-section">
+                <div className="admin-section-top">
+                  <h4>Gallery Images</h4>
+                  <button type="button" onClick={() => addPuppyGalleryImages(p)}>
+                    Add Gallery Images
+                  </button>
+                </div>
+
+                <div className="admin-gallery-grid">
+                  {(p.gallery_urls || []).map((url) => (
+                    <div className="admin-gallery-item" key={url}>
+                      <img src={url} alt="Puppy gallery" />
+                      <button
+                        type="button"
+                        className="danger"
+                        onClick={() => removePuppyGalleryImage(p, url)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="admin-pedigree-row">
+                <h4>Pedigree PDF</h4>
+
+                {p.pedigree_url ? (
+                  <a href={p.pedigree_url} target="_blank" rel="noreferrer">
+                    View Current Pedigree
+                  </a>
+                ) : (
+                  <p>No pedigree uploaded</p>
+                )}
+
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => updatePuppyPedigree(p.id, e.target.files[0])}
+                />
+              </div>
 
               <button className="danger" onClick={() => deletePuppy(p.id)}>
                 Delete Puppy
@@ -517,6 +734,7 @@ const Admin = () => {
               required
             />
 
+            <label className="admin-file-label">Main Stud Image</label>
             <input
               type="file"
               accept="image/*"
@@ -526,12 +744,32 @@ const Admin = () => {
               required
             />
 
+            <label className="admin-file-label">Extra Gallery Images</label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) =>
+                setStudForm({
+                  ...studForm,
+                  galleryFiles: Array.from(e.target.files),
+                })
+              }
+            />
+
+            <label className="admin-file-label">Pedigree PDF</label>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(e) =>
+                setStudForm({ ...studForm, pedigreeFile: e.target.files[0] })
+              }
+            />
+
             <input
               placeholder="Stud fee"
               value={studForm.fee}
-              onChange={(e) =>
-                setStudForm({ ...studForm, fee: e.target.value })
-              }
+              onChange={(e) => setStudForm({ ...studForm, fee: e.target.value })}
               required
             />
 
@@ -564,6 +802,19 @@ const Admin = () => {
               required
             />
 
+            <div className="admin-check-row">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={studForm.featured}
+                  onChange={(e) =>
+                    setStudForm({ ...studForm, featured: e.target.checked })
+                  }
+                />
+                Featured Stud
+              </label>
+            </div>
+
             <button type="submit">Add Stud</button>
           </form>
 
@@ -572,6 +823,13 @@ const Admin = () => {
               {s.image_url && (
                 <img className="admin-preview-img" src={s.image_url} alt={s.name} />
               )}
+
+              <label className="admin-file-label">Change Main Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => updateStudMainImage(s.id, e.target.files[0])}
+              />
 
               <input
                 value={s.name || ""}
@@ -599,10 +857,63 @@ const Admin = () => {
 
               <textarea
                 value={s.description || ""}
-                onChange={(e) =>
-                  updateStud(s.id, "description", e.target.value)
-                }
+                onChange={(e) => updateStud(s.id, "description", e.target.value)}
               />
+
+              <div className="admin-check-row">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={!!s.featured}
+                    onChange={(e) =>
+                      updateStud(s.id, "featured", e.target.checked)
+                    }
+                  />
+                  Featured
+                </label>
+              </div>
+
+              <div className="admin-gallery-section">
+                <div className="admin-section-top">
+                  <h4>Gallery Images</h4>
+                  <button type="button" onClick={() => addStudGalleryImages(s)}>
+                    Add Gallery Images
+                  </button>
+                </div>
+
+                <div className="admin-gallery-grid">
+                  {(s.gallery_urls || []).map((url) => (
+                    <div className="admin-gallery-item" key={url}>
+                      <img src={url} alt="Stud gallery" />
+                      <button
+                        type="button"
+                        className="danger"
+                        onClick={() => removeStudGalleryImage(s, url)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="admin-pedigree-row">
+                <h4>Pedigree PDF</h4>
+
+                {s.pedigree_url ? (
+                  <a href={s.pedigree_url} target="_blank" rel="noreferrer">
+                    View Current Pedigree
+                  </a>
+                ) : (
+                  <p>No pedigree uploaded</p>
+                )}
+
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => updateStudPedigree(s.id, e.target.files[0])}
+                />
+              </div>
 
               <button className="danger" onClick={() => deleteStud(s.id)}>
                 Delete Stud

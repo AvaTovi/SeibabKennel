@@ -23,7 +23,8 @@
     line-height: 1.7;
   }
   
-  .stud-info-banner {
+  .stud-info-banner,
+  .no-studs-box {
     margin-bottom: 3rem;
     padding: 2rem;
     border-radius: 30px;
@@ -31,19 +32,17 @@
       linear-gradient(135deg, rgba(217, 74, 56, 0.22), rgba(255, 255, 255, 0.05)),
       var(--card);
     border: 1px solid var(--card-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
   }
   
-  .stud-info-banner h2 {
+  .stud-info-banner h2,
+  .no-studs-box h2 {
     margin: 0 0 0.5rem;
     font-family: "Playfair Display", serif;
     font-size: 2.2rem;
   }
   
-  .stud-info-banner p {
+  .stud-info-banner p,
+  .no-studs-box p {
     margin: 0;
     color: var(--muted);
     line-height: 1.6;
@@ -90,16 +89,26 @@
     transform: scale(1.07);
   }
   
-  .stud-image-wrap span {
+  .stud-image-wrap span,
+  .featured-badge {
     position: absolute;
-    left: 1rem;
-    bottom: 1rem;
     padding: 0.55rem 0.8rem;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.72);
     border: 1px solid var(--card-border);
-    font-weight: 800;
+    font-weight: 900;
     font-size: 0.85rem;
+  }
+  
+  .stud-image-wrap span {
+    left: 1rem;
+    bottom: 1rem;
+  }
+  
+  .featured-badge {
+    top: 1rem;
+    right: 1rem;
+    background: var(--accent);
   }
   
   .stud-card-content {
@@ -123,22 +132,6 @@
     margin: 0 0 1rem;
   }
   
-  .stud-traits {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .stud-traits span {
-    padding: 0.45rem 0.65rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--card-border);
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-  
   .stud-fee {
     margin: 0;
     color: white;
@@ -149,7 +142,7 @@
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.82);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -158,7 +151,7 @@
   }
   
   .stud-modal {
-    width: min(900px, 95vw);
+    width: min(1120px, 95vw);
     max-height: 92vh;
     overflow-y: auto;
     border-radius: 34px;
@@ -166,23 +159,60 @@
     border: 1px solid var(--card-border);
     position: relative;
     box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
+    padding: 1.25rem;
   }
   
-  .stud-modal img {
+  .stud-modal-grid {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 1.5rem;
+  }
+  
+  .stud-modal-images > img {
     width: 100%;
-    max-height: 520px;
+    height: 620px;
+    object-fit: cover;
+    border-radius: 26px;
+    border: 1px solid var(--card-border);
+    display: block;
+  }
+  
+  .stud-thumb-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+  }
+  
+  .stud-thumb-row button {
+    padding: 0;
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    background: transparent;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .stud-thumb-row button.active {
+    border-color: var(--accent);
+  }
+  
+  .stud-thumb-row img {
+    width: 100%;
+    height: 80px;
     object-fit: cover;
     display: block;
   }
   
   .stud-modal-content {
-    padding: 2rem;
+    padding: 1rem;
   }
   
   .stud-modal-content h2 {
     margin: 0 0 1rem;
     font-family: "Playfair Display", serif;
-    font-size: 3rem;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1;
   }
   
   .stud-modal-content p {
@@ -190,31 +220,109 @@
     line-height: 1.7;
   }
   
-  .stud-modal-details {
-    margin: 1.5rem 0;
-    padding: 1.25rem;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--card-border);
+  .stud-modal-content strong {
+    color: white;
   }
   
-  .stud-modal-details strong {
+  .featured-pill {
+    display: inline-flex;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 999px;
+    background: var(--accent);
     color: white;
+    font-weight: 900;
+  }
+  
+  .stud-description-section {
+    margin: 1.5rem 0;
+  }
+  
+  .stud-description-section h4 {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  
+  .pedigree-button {
+    display: inline-flex;
+    margin-bottom: 1.5rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: white;
+    font-weight: 900;
+    text-decoration: none;
   }
   
   .stud-modal-close {
     position: absolute;
     top: 1rem;
     right: 1rem;
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     border: 1px solid var(--card-border);
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(0, 0, 0, 0.72);
     color: white;
-    font-size: 1.8rem;
+    font-size: 2rem;
     cursor: pointer;
-    z-index: 2;
+    z-index: 5;
+  }
+  
+  .stud-interest-box {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--card-border);
+  }
+  
+  .stud-interest-box h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.6rem;
+  }
+  
+  .stud-interest-form {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+  
+  .stud-interest-form input,
+  .stud-interest-form textarea {
+    width: 100%;
+    padding: 1rem 1.1rem;
+    border-radius: 18px;
+    border: 1px solid var(--card-border);
+    background: rgba(0, 0, 0, 0.45);
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+  }
+  
+  .stud-interest-form textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  .stud-interest-form button {
+    border: none;
+    border-radius: 999px;
+    padding: 1rem;
+    background: var(--accent);
+    color: white;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  
+  .stud-interest-form button:hover {
+    background: var(--accent-dark);
   }
   
   @media (max-width: 950px) {
@@ -222,14 +330,18 @@
       grid-template-columns: 1fr 1fr;
     }
   
-    .stud-info-banner {
-      flex-direction: column;
-      text-align: center;
+    .stud-modal-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .stud-modal-images > img {
+      height: 430px;
     }
   }
   
   @media (max-width: 620px) {
-    .studs-grid {
+    .studs-grid,
+    .stud-thumb-row {
       grid-template-columns: 1fr;
     }
   
