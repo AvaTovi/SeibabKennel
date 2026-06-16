@@ -1,0 +1,169 @@
+.whats-new-page {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 5rem 1.25rem;
+  }
+  
+  .whats-new-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .whats-new-hero h1 {
+    margin: 0;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.7rem, 6vw, 5rem);
+    line-height: 1;
+  }
+  
+  .whats-new-hero p {
+    max-width: 760px;
+    margin: 1rem auto 0;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  
+  .whats-new-empty {
+    text-align: center;
+    padding: 4rem 1.25rem;
+    border-radius: 30px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+  }
+  
+  .whats-new-empty h2 {
+    margin: 0 0 0.75rem;
+    font-size: 2rem;
+  }
+  
+  .whats-new-empty p {
+    margin: 0;
+    color: var(--muted);
+  }
+  
+  .whats-new-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .whats-new-card {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border-radius: 34px;
+    background:
+      radial-gradient(circle at top left, rgba(217, 74, 56, 0.22), transparent 35%),
+      var(--card);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 24px 65px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+  }
+  
+  .whats-new-image {
+    position: relative;
+    height: 360px;
+    border-radius: 26px;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  .whats-new-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .whats-new-image span {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: white;
+    font-weight: 900;
+    font-size: 0.85rem;
+  }
+  
+  .whats-new-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.25rem;
+  }
+  
+  .whats-new-tag {
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 1rem;
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(217, 74, 56, 0.16);
+    border: 1px solid rgba(217, 74, 56, 0.45);
+    color: #ffb6aa;
+    font-weight: 900;
+    font-size: 0.85rem;
+  }
+  
+  .whats-new-content h2 {
+    margin: 0 0 1rem;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1;
+  }
+  
+  .whats-new-content p {
+    margin: 0 0 1.5rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  
+  .whats-new-button {
+    width: fit-content;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.95rem 1.25rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: white;
+    font-weight: 900;
+    text-decoration: none;
+    transition: 180ms ease;
+  }
+  
+  .whats-new-button:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+  }
+  
+  @media (max-width: 900px) {
+    .whats-new-card {
+      grid-template-columns: 1fr;
+    }
+  
+    .whats-new-image {
+      height: 300px;
+    }
+  }
+  
+  @media (max-width: 620px) {
+    .whats-new-page {
+      padding: 3.5rem 1rem;
+    }
+  
+    .whats-new-card {
+      padding: 1rem;
+    }
+  
+    .whats-new-image {
+      height: 240px;
+    }
+  
+    .whats-new-button {
+      width: 100%;
+    }
+  }

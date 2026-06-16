@@ -5,6 +5,7 @@ import "yet-another-react-lightbox/styles.css";
 import "./home.css";
 
 import Reviews from "../Reviews/Reviews";
+import WhatsNewPreview from "../WhatsNewPreview/WhatsNewPreview";
 
 import video1 from "../../assets/SK1.mp4";
 import dog1 from "../../assets/dog1.png";
@@ -39,6 +40,8 @@ export default function Home() {
 
   return (
     <main className="home">
+      <WhatsNewPreview />
+
       <section className="hero-section">
         <div className="hero-content">
           <p className="eyebrow">Elite XL American Bullies</p>
@@ -65,7 +68,14 @@ export default function Home() {
         </div>
 
         <div className="hero-video-card" onClick={() => setOpenIndex(0)}>
-          <video className="hero-video" src={video1} autoPlay loop muted playsInline />
+          <video
+            className="hero-video"
+            src={video1}
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
           <div className="video-badge">Watch Preview</div>
         </div>
       </section>

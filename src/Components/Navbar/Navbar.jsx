@@ -7,7 +7,8 @@ const Navbar = () => {
   return (
     <header className="navbar">
       <Link to="/" className="navbar-brand">
-        <img src={logo} alt="Seibab Kennel logo" className="navbar-logo" />
+        <img src={logo} alt="Seibab Kennel Logo" className="navbar-logo" />
+
         <div>
           <h1>Seibab Kennel</h1>
           <p>Extreme / XL American Bullies</p>
@@ -17,6 +18,10 @@ const Navbar = () => {
       <nav className="nav-menu">
         <NavLink to="/" className="nav-link">
           Home
+        </NavLink>
+
+        <NavLink to="/whats-new" className="nav-link">
+          What&apos;s New
         </NavLink>
 
         <NavLink to="/available-puppies" className="nav-link">

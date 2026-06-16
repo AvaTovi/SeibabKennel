@@ -13,6 +13,7 @@ const Admin = () => {
   const [puppies, setPuppies] = useState([]);
   const [studs, setStuds] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [updates, setUpdates] = useState([]);
 
   const [puppyForm, setPuppyForm] = useState({
     name: "",
@@ -39,12 +40,24 @@ const Admin = () => {
     featured: false,
   });
 
+  const [updateForm, setUpdateForm] = useState({
+    title: "",
+    tag: "Announcement",
+    description: "",
+    imageFile: null,
+    buttonText: "Learn More",
+    redirectPath: "/whats-new",
+    active: true,
+    featured: false,
+  });
+
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem("adminLoggedIn") === "true");
     fetchMessages();
     fetchPuppies();
     fetchStuds();
     fetchReviews();
+    fetchUpdates();
   }, []);
 
   const fetchMessages = async () => {
@@ -83,31 +96,13 @@ const Admin = () => {
     if (!error) setReviews(data || []);
   };
 
-  const approveReview = async (id, approved) => {
-    const { error } = await supabase
-      .from("Reviews")
-      .update({ approved })
-      .eq("id", id);
+  const fetchUpdates = async () => {
+    const { data, error } = await supabase
+      .from("WhatsNew")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-    if (error) {
-      alert(`Review update failed: ${error.message}`);
-      return;
-    }
-
-    fetchReviews();
-  };
-
-  const deleteReview = async (id) => {
-    if (!window.confirm("Delete this review?")) return;
-
-    const { error } = await supabase.from("Reviews").delete().eq("id", id);
-
-    if (error) {
-      alert(`Review delete failed: ${error.message}`);
-      return;
-    }
-
-    fetchReviews();
+    if (!error) setUpdates(data || []);
   };
 
   const uploadFile = async (file, folder) => {
@@ -176,6 +171,106 @@ const Admin = () => {
     if (!window.confirm("Delete this message?")) return;
     await supabase.from("Messages").delete().eq("id", id);
     fetchMessages();
+  };
+
+  const approveReview = async (id, approved) => {
+    const { error } = await supabase
+      .from("Reviews")
+      .update({ approved })
+      .eq("id", id);
+
+    if (error) {
+      alert(`Review update failed: ${error.message}`);
+      return;
+    }
+
+    fetchReviews();
+  };
+
+  const deleteReview = async (id) => {
+    if (!window.confirm("Delete this review?")) return;
+
+    const { error } = await supabase.from("Reviews").delete().eq("id", id);
+
+    if (error) {
+      alert(`Review delete failed: ${error.message}`);
+      return;
+    }
+
+    fetchReviews();
+  };
+
+  const addUpdate = async (e) => {
+    e.preventDefault();
+
+    const imageUrl = await uploadFile(updateForm.imageFile, "whats-new");
+
+    const { error } = await supabase.from("WhatsNew").insert([
+      {
+        title: updateForm.title,
+        tag: updateForm.tag,
+        description: updateForm.description,
+        image_url: imageUrl,
+        button_text: updateForm.buttonText,
+        redirect_path: updateForm.redirectPath,
+        active: updateForm.active,
+        featured: updateForm.featured,
+      },
+    ]);
+
+    if (error) {
+      alert(`Failed to add update: ${error.message}`);
+      return;
+    }
+
+    alert("What's New update added successfully!");
+
+    setUpdateForm({
+      title: "",
+      tag: "Announcement",
+      description: "",
+      imageFile: null,
+      buttonText: "Learn More",
+      redirectPath: "/whats-new",
+      active: true,
+      featured: false,
+    });
+
+    fetchUpdates();
+  };
+
+  const updateWhatsNew = async (id, field, value) => {
+    const { error } = await supabase
+      .from("WhatsNew")
+      .update({ [field]: value })
+      .eq("id", id);
+
+    if (error) {
+      alert(`Update failed: ${error.message}`);
+      return;
+    }
+
+    fetchUpdates();
+  };
+
+  const updateWhatsNewImage = async (id, file) => {
+    const imageUrl = await uploadFile(file, "whats-new");
+    if (!imageUrl) return;
+
+    await updateWhatsNew(id, "image_url", imageUrl);
+  };
+
+  const deleteWhatsNew = async (id) => {
+    if (!window.confirm("Delete this update?")) return;
+
+    const { error } = await supabase.from("WhatsNew").delete().eq("id", id);
+
+    if (error) {
+      alert(`Delete failed: ${error.message}`);
+      return;
+    }
+
+    fetchUpdates();
   };
 
   const addPuppy = async (e) => {
@@ -410,7 +505,10 @@ const Admin = () => {
         <form className="admin-login-card" onSubmit={handleLogin}>
           <p className="eyebrow">Admin Login</p>
           <h1>Seibab Kennel Admin</h1>
-          <p>Manage messages, puppies, studs, reviews, and website information.</p>
+          <p>
+            Manage messages, puppies, studs, reviews, updates, and website
+            information.
+          </p>
 
           <input
             type="password"
@@ -461,6 +559,11 @@ const Admin = () => {
           <h3>Reviews</h3>
           <p>{reviews.length}</p>
         </div>
+
+        <div>
+          <h3>Updates</h3>
+          <p>{updates.length}</p>
+        </div>
       </section>
 
       <nav className="admin-tabs">
@@ -469,6 +572,13 @@ const Admin = () => {
           onClick={() => setActiveTab("messages")}
         >
           Messages
+        </button>
+
+        <button
+          className={activeTab === "updates" ? "active" : ""}
+          onClick={() => setActiveTab("updates")}
+        >
+          What&apos;s New
         </button>
 
         <button
@@ -543,6 +653,211 @@ const Admin = () => {
                     Delete
                   </button>
                 </div>
+              </article>
+            ))
+          )}
+        </section>
+      )}
+
+      {activeTab === "updates" && (
+        <section className="admin-panel">
+          <h2>Manage What&apos;s New</h2>
+
+          <form className="admin-form" onSubmit={addUpdate}>
+            <input
+              placeholder="Update title"
+              value={updateForm.title}
+              onChange={(e) =>
+                setUpdateForm({ ...updateForm, title: e.target.value })
+              }
+              required
+            />
+
+            <select
+              value={updateForm.tag}
+              onChange={(e) =>
+                setUpdateForm({ ...updateForm, tag: e.target.value })
+              }
+            >
+              <option>Announcement</option>
+              <option>New Puppy</option>
+              <option>New Stud</option>
+              <option>Breed News</option>
+              <option>Upcoming Litter</option>
+              <option>Event</option>
+              <option>Important Update</option>
+            </select>
+
+            <textarea
+              placeholder="Description"
+              value={updateForm.description}
+              onChange={(e) =>
+                setUpdateForm({ ...updateForm, description: e.target.value })
+              }
+              required
+            />
+
+            <label className="admin-file-label">Optional Update Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setUpdateForm({ ...updateForm, imageFile: e.target.files[0] })
+              }
+            />
+
+            <input
+              placeholder="Button text"
+              value={updateForm.buttonText}
+              onChange={(e) =>
+                setUpdateForm({ ...updateForm, buttonText: e.target.value })
+              }
+            />
+
+            <select
+              value={updateForm.redirectPath}
+              onChange={(e) =>
+                setUpdateForm({ ...updateForm, redirectPath: e.target.value })
+              }
+            >
+              <option value="/whats-new">What&apos;s New Page</option>
+              <option value="/available-puppies">Available Puppies</option>
+              <option value="/studs">Studs</option>
+              <option value="/contact">Contact</option>
+              <option value="/about">About</option>
+            </select>
+
+            <div className="admin-check-row">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={updateForm.active}
+                  onChange={(e) =>
+                    setUpdateForm({ ...updateForm, active: e.target.checked })
+                  }
+                />
+                Active
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  checked={updateForm.featured}
+                  onChange={(e) =>
+                    setUpdateForm({ ...updateForm, featured: e.target.checked })
+                  }
+                />
+                Featured
+              </label>
+            </div>
+
+            <button type="submit">Add Update</button>
+          </form>
+
+          {updates.length === 0 ? (
+            <div className="empty-box">
+              <h3>No updates yet</h3>
+              <p>What&apos;s New posts will appear here.</p>
+            </div>
+          ) : (
+            updates.map((item) => (
+              <article className="admin-card edit-card" key={item.id}>
+                {item.image_url && (
+                  <img
+                    className="admin-preview-img"
+                    src={item.image_url}
+                    alt={item.title}
+                  />
+                )}
+
+                <label className="admin-file-label">Change Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    updateWhatsNewImage(item.id, e.target.files[0])
+                  }
+                />
+
+                <input
+                  value={item.title || ""}
+                  onChange={(e) =>
+                    updateWhatsNew(item.id, "title", e.target.value)
+                  }
+                />
+
+                <select
+                  value={item.tag || "Announcement"}
+                  onChange={(e) =>
+                    updateWhatsNew(item.id, "tag", e.target.value)
+                  }
+                >
+                  <option>Announcement</option>
+                  <option>New Puppy</option>
+                  <option>New Stud</option>
+                  <option>Breed News</option>
+                  <option>Upcoming Litter</option>
+                  <option>Event</option>
+                  <option>Important Update</option>
+                </select>
+
+                <textarea
+                  value={item.description || ""}
+                  onChange={(e) =>
+                    updateWhatsNew(item.id, "description", e.target.value)
+                  }
+                />
+
+                <input
+                  value={item.button_text || ""}
+                  onChange={(e) =>
+                    updateWhatsNew(item.id, "button_text", e.target.value)
+                  }
+                />
+
+                <select
+                  value={item.redirect_path || "/whats-new"}
+                  onChange={(e) =>
+                    updateWhatsNew(item.id, "redirect_path", e.target.value)
+                  }
+                >
+                  <option value="/whats-new">What&apos;s New Page</option>
+                  <option value="/available-puppies">Available Puppies</option>
+                  <option value="/studs">Studs</option>
+                  <option value="/contact">Contact</option>
+                  <option value="/about">About</option>
+                </select>
+
+                <div className="admin-check-row">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={!!item.active}
+                      onChange={(e) =>
+                        updateWhatsNew(item.id, "active", e.target.checked)
+                      }
+                    />
+                    Active
+                  </label>
+
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={!!item.featured}
+                      onChange={(e) =>
+                        updateWhatsNew(item.id, "featured", e.target.checked)
+                      }
+                    />
+                    Featured
+                  </label>
+                </div>
+
+                <button
+                  className="danger"
+                  onClick={() => deleteWhatsNew(item.id)}
+                >
+                  Delete Update
+                </button>
               </article>
             ))
           )}

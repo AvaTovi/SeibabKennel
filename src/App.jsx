@@ -8,6 +8,7 @@ import About from "./Components/About/About";
 import Contact from "./Components/Contact/Contact";
 import Admin from "./Components/Admin/Admin";
 import Footer from "./Components/Footer/Footer";
+import WhatsNew from "./Components/WhatsNew/WhatsNew";
 import "./App.css";
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/whats-new" element={<WhatsNew />} />
         <Route path="/available-puppies" element={<AvailablePuppies />} />
         <Route path="/studs" element={<Studs />} />
         <Route path="/about" element={<About />} />
