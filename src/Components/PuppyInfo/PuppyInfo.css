@@ -1,0 +1,253 @@
+.puppy-info-page {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 4.5rem 1.25rem;
+  }
+  
+  .puppy-info-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .puppy-info-hero h1 {
+    margin: 0;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.8rem, 6vw, 5.4rem);
+    line-height: 0.95;
+  }
+  
+  .puppy-info-hero p {
+    max-width: 720px;
+    margin: 1rem auto 0;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  
+  .puppy-info-hero-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  
+  .puppy-info-shell {
+    display: grid;
+    grid-template-columns: 0.38fr 1fr;
+    gap: 1.25rem;
+    padding: 1.4rem;
+    border-radius: 34px;
+    background:
+      radial-gradient(circle at top left, rgba(217, 74, 56, 0.16), transparent 32%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018)),
+      var(--card);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+  }
+  
+  .puppy-info-sidebar {
+    padding: 1rem;
+    border-radius: 28px;
+    background: rgba(0, 0, 0, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.075);
+  }
+  
+  .puppy-info-sidebar button {
+    width: 100%;
+    display: block;
+    margin-bottom: 0.7rem;
+    padding: 0.95rem 1rem;
+    border-radius: 18px;
+    border: 1px solid var(--card-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    text-align: left;
+    font-family: inherit;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 180ms ease;
+  }
+  
+  .puppy-info-sidebar button:hover,
+  .puppy-info-sidebar button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  
+  .puppy-info-content {
+    padding: 1rem;
+    border-radius: 28px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.075);
+  }
+  
+  .puppy-info-topic-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1.25rem;
+    border-radius: 24px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+      rgba(12, 12, 12, 0.92);
+    border: 1px solid var(--card-border);
+  }
+  
+  .puppy-info-topic-header span {
+    width: 54px;
+    height: 54px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 18px;
+    background: rgba(217, 74, 56, 0.16);
+    border: 1px solid rgba(217, 74, 56, 0.45);
+    color: #ffb6aa;
+    font-weight: 900;
+  }
+  
+  .puppy-info-topic-header h2 {
+    margin: 0 0 0.5rem;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1;
+  }
+  
+  .puppy-info-topic-header p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  
+  .qa-list {
+    display: grid;
+    gap: 0.8rem;
+  }
+  
+  .qa-card {
+    border-radius: 22px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)),
+      rgba(12, 12, 12, 0.92);
+    border: 1px solid var(--card-border);
+    overflow: hidden;
+  }
+  
+  .qa-card.open {
+    border-color: rgba(217, 74, 56, 0.5);
+  }
+  
+  .qa-question {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.15rem 1.25rem;
+    border: none;
+    background: transparent;
+    color: white;
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 900;
+    text-align: left;
+    cursor: pointer;
+  }
+  
+  .qa-question strong {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 999px;
+    background: rgba(217, 74, 56, 0.16);
+    color: #ffb6aa;
+    font-size: 1.4rem;
+  }
+  
+  .qa-answer {
+    margin: 0;
+    padding: 0 1.25rem 1.25rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+  
+  .puppy-info-cta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 3rem;
+    padding: 1.6rem;
+    border-radius: 34px;
+    background:
+      radial-gradient(circle at top left, rgba(217, 74, 56, 0.2), transparent 35%),
+      var(--card);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+  }
+  
+  .puppy-info-cta h2 {
+    margin: 0 0 0.7rem;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1;
+  }
+  
+  .puppy-info-cta p {
+    max-width: 700px;
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  
+  @media (max-width: 900px) {
+    .puppy-info-shell {
+      grid-template-columns: 1fr;
+    }
+  
+    .puppy-info-sidebar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+    }
+  
+    .puppy-info-sidebar button {
+      margin-bottom: 0;
+    }
+  
+    .puppy-info-cta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  
+  @media (max-width: 620px) {
+    .puppy-info-page {
+      padding: 3rem 1rem;
+    }
+  
+    .puppy-info-shell,
+    .puppy-info-cta {
+      padding: 1rem;
+      border-radius: 28px;
+    }
+  
+    .puppy-info-sidebar {
+      grid-template-columns: 1fr;
+    }
+  
+    .puppy-info-topic-header {
+      grid-template-columns: 1fr;
+    }
+  
+    .puppy-info-hero-actions .primary-button,
+    .puppy-info-hero-actions .secondary-button,
+    .puppy-info-cta .primary-button {
+      width: 100%;
+    }
+  }

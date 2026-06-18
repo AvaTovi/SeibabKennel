@@ -14,6 +14,8 @@ const Admin = () => {
   const [studs, setStuds] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [updates, setUpdates] = useState([]);
+  const [breedings, setBreedings] = useState([]);
+  const [depositRequests, setDepositRequests] = useState([]);
 
   const [puppyForm, setPuppyForm] = useState({
     name: "",
@@ -51,6 +53,18 @@ const Admin = () => {
     featured: false,
   });
 
+  const [breedingForm, setBreedingForm] = useState({
+    title: "",
+    imageFile: null,
+    sire: "",
+    dam: "",
+    expectedDate: "",
+    status: "Upcoming",
+    description: "",
+    active: true,
+    featured: false,
+  });
+
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem("adminLoggedIn") === "true");
     fetchMessages();
@@ -58,6 +72,8 @@ const Admin = () => {
     fetchStuds();
     fetchReviews();
     fetchUpdates();
+    fetchBreedings();
+    fetchDepositRequests();
   }, []);
 
   const fetchMessages = async () => {
@@ -103,6 +119,25 @@ const Admin = () => {
       .order("created_at", { ascending: false });
 
     if (!error) setUpdates(data || []);
+  };
+
+  const fetchBreedings = async () => {
+    const { data, error } = await supabase
+      .from("UpcomingBreedings")
+      .select("*")
+      .order("featured", { ascending: false })
+      .order("created_at", { ascending: false });
+
+    if (!error) setBreedings(data || []);
+  };
+
+  const fetchDepositRequests = async () => {
+    const { data, error } = await supabase
+      .from("DepositRequests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error) setDepositRequests(data || []);
   };
 
   const uploadFile = async (file, folder) => {
@@ -271,6 +306,90 @@ const Admin = () => {
     }
 
     fetchUpdates();
+  };
+
+  const addBreeding = async (e) => {
+    e.preventDefault();
+
+    const imageUrl = await uploadFile(
+      breedingForm.imageFile,
+      "upcoming-breedings"
+    );
+
+    const { error } = await supabase.from("UpcomingBreedings").insert([
+      {
+        title: breedingForm.title,
+        image_url: imageUrl,
+        sire: breedingForm.sire,
+        dam: breedingForm.dam,
+        expected_date: breedingForm.expectedDate,
+        status: breedingForm.status,
+        description: breedingForm.description,
+        active: breedingForm.active,
+        featured: breedingForm.featured,
+      },
+    ]);
+
+    if (error) {
+      alert(`Failed to add upcoming breeding: ${error.message}`);
+      return;
+    }
+
+    alert("Upcoming breeding added successfully!");
+
+    setBreedingForm({
+      title: "",
+      imageFile: null,
+      sire: "",
+      dam: "",
+      expectedDate: "",
+      status: "Upcoming",
+      description: "",
+      active: true,
+      featured: false,
+    });
+
+    fetchBreedings();
+    fetchDepositRequests();
+  };
+
+  const updateBreeding = async (id, field, value) => {
+    const { error } = await supabase
+      .from("UpcomingBreedings")
+      .update({ [field]: value })
+      .eq("id", id);
+
+    if (error) {
+      alert(`Update failed: ${error.message}`);
+      return;
+    }
+
+    fetchBreedings();
+    fetchDepositRequests();
+  };
+
+  const updateBreedingImage = async (id, file) => {
+    const imageUrl = await uploadFile(file, "upcoming-breedings");
+    if (!imageUrl) return;
+
+    await updateBreeding(id, "image_url", imageUrl);
+  };
+
+  const deleteBreeding = async (id) => {
+    if (!window.confirm("Delete this upcoming breeding?")) return;
+
+    const { error } = await supabase
+      .from("UpcomingBreedings")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      alert(`Delete failed: ${error.message}`);
+      return;
+    }
+
+    fetchBreedings();
+    fetchDepositRequests();
   };
 
   const addPuppy = async (e) => {
@@ -499,6 +618,84 @@ const Admin = () => {
     fetchStuds();
   };
 
+  const updateDepositStatus = async (id, status) => {
+    const { error } = await supabase
+      .from("DepositRequests")
+      .update({ status })
+      .eq("id", id);
+
+    if (error) {
+      alert(`Deposit status update failed: ${error.message}`);
+      return;
+    }
+
+    fetchDepositRequests();
+  };
+
+  const deleteDepositRequest = async (id) => {
+    if (!window.confirm("Delete this deposit request?")) return;
+
+    const { error } = await supabase
+      .from("DepositRequests")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      alert(`Deposit request delete failed: ${error.message}`);
+      return;
+    }
+
+    fetchDepositRequests();
+  };
+
+  const createEmailLink = (email, subject, body) => {
+    return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const getInquiryEmailBody = (name, originalMessage) => {
+    return `Hi ${name},
+
+Thank you for reaching out to Seibab Kennel.
+
+I received your inquiry and wanted to follow up with you. Before moving forward, I would like to learn a little more about your home, experience with dogs, and what you are looking for so we can make sure this is the right fit.
+
+I will send over a few questions shortly. In the meantime, feel free to reply with anything else you would like me to know.
+
+Original inquiry:
+${originalMessage || "No message provided"}
+
+Thank you,
+Seibab Kennel`;
+  };
+
+  const getDepositEmailBody = (request) => {
+    return `Hi ${request.name},
+
+Thank you for submitting a deposit request with Seibab Kennel.
+
+I received your request and wanted to follow up before moving forward with deposit/payment details.
+
+Deposit request details:
+Interested in: ${request.interested_in || "Not provided"}
+Interest type: ${request.interest_type || "Not provided"}
+Deposit type: ${request.deposit_type || "Not provided"}
+Phone: ${request.phone || "Not provided"}
+
+Before we move forward, I may ask a few buyer questions to make sure this is a good fit and to confirm the next steps.
+
+Thank you,
+Seibab Kennel`;
+  };
+
+  const getReviewEmailBody = (review) => {
+    return `Hi ${review.name},
+
+Thank you for taking the time to leave a review for Seibab Kennel. I appreciate your feedback and support.
+
+Thank you,
+Seibab Kennel`;
+  };
+
   if (!isLoggedIn) {
     return (
       <main className="admin-login-page">
@@ -506,7 +703,7 @@ const Admin = () => {
           <p className="eyebrow">Admin Login</p>
           <h1>Seibab Kennel Admin</h1>
           <p>
-            Manage messages, puppies, studs, reviews, updates, and website
+            Manage messages, puppies, studs, reviews, updates, upcoming breedings, deposit requests, and website
             information.
           </p>
 
@@ -564,6 +761,16 @@ const Admin = () => {
           <h3>Updates</h3>
           <p>{updates.length}</p>
         </div>
+
+        <div>
+          <h3>Breedings</h3>
+          <p>{breedings.length}</p>
+        </div>
+
+        <div>
+          <h3>Deposits</h3>
+          <p>{depositRequests.length}</p>
+        </div>
       </section>
 
       <nav className="admin-tabs">
@@ -579,6 +786,20 @@ const Admin = () => {
           onClick={() => setActiveTab("updates")}
         >
           What&apos;s New
+        </button>
+
+        <button
+          className={activeTab === "breedings" ? "active" : ""}
+          onClick={() => setActiveTab("breedings")}
+        >
+          Upcoming Breedings
+        </button>
+
+        <button
+          className={activeTab === "deposits" ? "active" : ""}
+          onClick={() => setActiveTab("deposits")}
+        >
+          Deposit Requests
         </button>
 
         <button
@@ -630,7 +851,11 @@ const Admin = () => {
                 <div className="action-row">
                   <a
                     className="email-customer-button"
-                    href={`mailto:${msg.email}?subject=Seibab Kennel Inquiry&body=Hi ${msg.name},%0D%0A%0D%0AThank you for reaching out to Seibab Kennel.%0D%0A%0D%0A`}
+                    href={createEmailLink(
+                      msg.email,
+                      "Seibab Kennel Inquiry Follow-Up",
+                      getInquiryEmailBody(msg.name, msg.message)
+                    )}
                   >
                     Email Customer
                   </a>
@@ -864,6 +1089,347 @@ const Admin = () => {
         </section>
       )}
 
+
+      {activeTab === "breedings" && (
+        <section className="admin-panel">
+          <h2>Manage Upcoming Breedings</h2>
+
+          <form className="admin-form" onSubmit={addBreeding}>
+            <input
+              placeholder="Breeding title, example: King x Luna Summer Litter"
+              value={breedingForm.title}
+              onChange={(e) =>
+                setBreedingForm({ ...breedingForm, title: e.target.value })
+              }
+              required
+            />
+
+            <label className="admin-file-label">Optional Breeding Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setBreedingForm({
+                  ...breedingForm,
+                  imageFile: e.target.files[0],
+                })
+              }
+            />
+
+            <input
+              placeholder="Sire / Male"
+              value={breedingForm.sire}
+              onChange={(e) =>
+                setBreedingForm({ ...breedingForm, sire: e.target.value })
+              }
+            />
+
+            <input
+              placeholder="Dam / Female"
+              value={breedingForm.dam}
+              onChange={(e) =>
+                setBreedingForm({ ...breedingForm, dam: e.target.value })
+              }
+            />
+
+            <input
+              placeholder="Expected date, example: Summer 2026 or July 2026"
+              value={breedingForm.expectedDate}
+              onChange={(e) =>
+                setBreedingForm({
+                  ...breedingForm,
+                  expectedDate: e.target.value,
+                })
+              }
+            />
+
+            <select
+              value={breedingForm.status}
+              onChange={(e) =>
+                setBreedingForm({ ...breedingForm, status: e.target.value })
+              }
+            >
+              <option>Upcoming</option>
+              <option>Confirmed</option>
+              <option>Pregnancy Confirmed</option>
+              <option>Born</option>
+              <option>Waitlist Open</option>
+              <option>Closed</option>
+            </select>
+
+            <textarea
+              placeholder="Describe this upcoming breeding, expected colors, structure, temperament, or waitlist details."
+              value={breedingForm.description}
+              onChange={(e) =>
+                setBreedingForm({
+                  ...breedingForm,
+                  description: e.target.value,
+                })
+              }
+              required
+            />
+
+            <div className="admin-check-row">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={breedingForm.active}
+                  onChange={(e) =>
+                    setBreedingForm({
+                      ...breedingForm,
+                      active: e.target.checked,
+                    })
+                  }
+                />
+                Active
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  checked={breedingForm.featured}
+                  onChange={(e) =>
+                    setBreedingForm({
+                      ...breedingForm,
+                      featured: e.target.checked,
+                    })
+                  }
+                />
+                Featured
+              </label>
+            </div>
+
+            <button type="submit">Add Upcoming Breeding</button>
+          </form>
+
+          {breedings.length === 0 ? (
+            <div className="empty-box">
+              <h3>No upcoming breedings yet</h3>
+              <p>Upcoming breeding posts will appear here.</p>
+            </div>
+          ) : (
+            breedings.map((breeding) => (
+              <article className="admin-card edit-card" key={breeding.id}>
+                {breeding.image_url && (
+                  <img
+                    className="admin-preview-img"
+                    src={breeding.image_url}
+                    alt={breeding.title}
+                  />
+                )}
+
+                <label className="admin-file-label">Change Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    updateBreedingImage(breeding.id, e.target.files[0])
+                  }
+                />
+
+                <input
+                  value={breeding.title || ""}
+                  onChange={(e) =>
+                    updateBreeding(breeding.id, "title", e.target.value)
+                  }
+                />
+
+                <input
+                  value={breeding.sire || ""}
+                  placeholder="Sire / Male"
+                  onChange={(e) =>
+                    updateBreeding(breeding.id, "sire", e.target.value)
+                  }
+                />
+
+                <input
+                  value={breeding.dam || ""}
+                  placeholder="Dam / Female"
+                  onChange={(e) =>
+                    updateBreeding(breeding.id, "dam", e.target.value)
+                  }
+                />
+
+                <input
+                  value={breeding.expected_date || ""}
+                  placeholder="Expected date"
+                  onChange={(e) =>
+                    updateBreeding(
+                      breeding.id,
+                      "expected_date",
+                      e.target.value
+                    )
+                  }
+                />
+
+                <select
+                  value={breeding.status || "Upcoming"}
+                  onChange={(e) =>
+                    updateBreeding(breeding.id, "status", e.target.value)
+                  }
+                >
+                  <option>Upcoming</option>
+                  <option>Confirmed</option>
+                  <option>Pregnancy Confirmed</option>
+                  <option>Born</option>
+                  <option>Waitlist Open</option>
+                  <option>Closed</option>
+                </select>
+
+                <textarea
+                  value={breeding.description || ""}
+                  onChange={(e) =>
+                    updateBreeding(
+                      breeding.id,
+                      "description",
+                      e.target.value
+                    )
+                  }
+                />
+
+                <div className="admin-check-row">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={!!breeding.active}
+                      onChange={(e) =>
+                        updateBreeding(
+                          breeding.id,
+                          "active",
+                          e.target.checked
+                        )
+                      }
+                    />
+                    Active
+                  </label>
+
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={!!breeding.featured}
+                      onChange={(e) =>
+                        updateBreeding(
+                          breeding.id,
+                          "featured",
+                          e.target.checked
+                        )
+                      }
+                    />
+                    Featured
+                  </label>
+                </div>
+
+                <button
+                  className="danger"
+                  onClick={() => deleteBreeding(breeding.id)}
+                >
+                  Delete Upcoming Breeding
+                </button>
+              </article>
+            ))
+          )}
+        </section>
+      )}
+
+
+      {activeTab === "deposits" && (
+        <section className="admin-panel">
+          <h2>Deposit Requests</h2>
+
+          {depositRequests.length === 0 ? (
+            <div className="empty-box">
+              <h3>No deposit requests yet</h3>
+              <p>Buyer deposit requests will appear here.</p>
+            </div>
+          ) : (
+            depositRequests.map((request) => (
+              <article className="admin-card" key={request.id}>
+                <div className="card-top">
+                  <div>
+                    <h3>{request.name}</h3>
+                    <p>{request.email}</p>
+                    <p>{request.phone}</p>
+                    <small>{new Date(request.created_at).toLocaleString()}</small>
+                  </div>
+
+                  <span className="status-pill">{request.status}</span>
+                </div>
+
+                <div className="message-box">
+                  <p>
+                    <strong>Interested In:</strong> {request.interested_in}
+                  </p>
+                  <p>
+                    <strong>Interest Type:</strong> {request.interest_type}
+                  </p>
+                  <p>
+                    <strong>Deposit Type:</strong> {request.deposit_type}
+                  </p>
+                  <p>
+                    <strong>Message:</strong>
+                  </p>
+                  <p>{request.message}</p>
+                </div>
+
+                <div className="action-row">
+                  <a
+                    className="email-customer-button"
+                    href={createEmailLink(
+                      request.email,
+                      "Seibab Kennel Deposit Request Follow-Up",
+                      getDepositEmailBody(request)
+                    )}
+                  >
+                    Email Customer
+                  </a>
+
+                  <button
+                    onClick={() => updateDepositStatus(request.id, "New")}
+                  >
+                    Mark New
+                  </button>
+
+                  <button
+                    onClick={() => updateDepositStatus(request.id, "Contacted")}
+                  >
+                    Contacted
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      updateDepositStatus(request.id, "Pending Payment")
+                    }
+                  >
+                    Pending Payment
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      updateDepositStatus(request.id, "Deposit Received")
+                    }
+                  >
+                    Deposit Received
+                  </button>
+
+                  <button
+                    onClick={() => updateDepositStatus(request.id, "Closed")}
+                  >
+                    Closed
+                  </button>
+
+                  <button
+                    className="danger"
+                    onClick={() => deleteDepositRequest(request.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </article>
+            ))
+          )}
+        </section>
+      )}
+
       {activeTab === "reviews" && (
         <section className="admin-panel">
           <h2>Customer Reviews</h2>
@@ -904,6 +1470,17 @@ const Admin = () => {
                 </p>
 
                 <div className="action-row">
+                  <a
+                    className="email-customer-button"
+                    href={createEmailLink(
+                      review.email,
+                      "Thank You From Seibab Kennel",
+                      getReviewEmailBody(review)
+                    )}
+                  >
+                    Email Customer
+                  </a>
+
                   {review.rating === 5 && (
                     <>
                       <button onClick={() => approveReview(review.id, true)}>

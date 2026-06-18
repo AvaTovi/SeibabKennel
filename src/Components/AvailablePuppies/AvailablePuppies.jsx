@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import "./AvailablePuppies.css";
 import Reviews from "../Reviews/Reviews";
+import UpcomingBreedings from "../UpcomingBreedings/UpcomingBreedings";
 
 export default function AvailablePuppies() {
   const [selected, setSelected] = useState(null);
@@ -107,75 +108,100 @@ ${interestForm.message}
       <section className="available-hero">
         <p className="eyebrow">Available Puppies</p>
         <h1>Find Your Next XL Bully</h1>
-        <p>Browse our current puppies and contact us for more details.</p>
+        <p>Browse current puppies, upcoming breedings, and past placements.</p>
       </section>
 
-      {availablePuppies.length === 0 ? (
-        <section className="no-puppies-box">
-          <h2>No puppies listed right now</h2>
-          <p>Please check back soon or contact us about upcoming litters.</p>
-        </section>
-      ) : (
-        <section className="puppy-grid">
-          {availablePuppies.map((puppy) => (
-            <button
-              key={puppy.id}
-              className="puppy-card"
-              onClick={() => openPuppy(puppy)}
-            >
-              <div className="puppy-image-wrap">
-                <img src={puppy.image_url} alt={puppy.name} />
+      <UpcomingBreedings />
 
-                {puppy.featured && (
-                  <span className="featured-badge">Featured</span>
-                )}
-              </div>
-
-              <div className="puppy-card-content">
-                <span className="status-label">{puppy.status}</span>
-                <h3>{puppy.name}</h3>
-                <p className="puppy-gender">{puppy.gender}</p>
-                <p className="puppy-desc">{puppy.description}</p>
-                <p className="puppy-price">{puppy.price}</p>
-              </div>
-            </button>
-          ))}
-        </section>
-      )}
-
-      {soldPuppies.length > 0 && (
-        <section className="sold-gallery-section">
-          <div className="sold-gallery-heading">
-            <p className="eyebrow">Past Puppies</p>
-            <h2>Sold Puppy Gallery</h2>
-            <p>A look at puppies that have already found their homes.</p>
+      <section className="available-section-shell">
+        <div className="available-section-top">
+          <div>
+            <p className="eyebrow">Available Now</p>
+            <h2>Current Puppies</h2>
           </div>
 
-          <section className="puppy-grid">
-            {soldPuppies.map((puppy) => (
-              <button
-                key={puppy.id}
-                className="puppy-card sold-card"
-                onClick={() => openPuppy(puppy)}
-              >
-                <div className="puppy-image-wrap">
-                  <img src={puppy.image_url} alt={puppy.name} />
-                  <span className="sold-badge">Sold</span>
-                </div>
+          <p>
+            Click any puppy to view more photos, pedigree information, and send
+            an interest message directly to the owner.
+          </p>
+        </div>
 
-                <div className="puppy-card-content">
-                  <h3>{puppy.name}</h3>
-                  <p className="puppy-gender">{puppy.gender}</p>
-                  <p className="puppy-desc">{puppy.description}</p>
-                </div>
-              </button>
-            ))}
-          </section>
+        <div className="available-section-inner">
+          {availablePuppies.length === 0 ? (
+            <section className="no-puppies-box">
+              <h3>No puppies listed right now</h3>
+              <p>Please check back soon or contact us about upcoming litters.</p>
+            </section>
+          ) : (
+            <section className="puppy-grid">
+              {availablePuppies.map((puppy) => (
+                <button
+                  key={puppy.id}
+                  className="puppy-card"
+                  onClick={() => openPuppy(puppy)}
+                >
+                  <div className="puppy-image-wrap">
+                    <img src={puppy.image_url} alt={puppy.name} />
+
+                    {puppy.featured && (
+                      <span className="featured-badge">Featured</span>
+                    )}
+                  </div>
+
+                  <div className="puppy-card-content">
+                    <span className="status-label">{puppy.status}</span>
+                    <h3>{puppy.name}</h3>
+                    <p className="puppy-gender">{puppy.gender}</p>
+                    <p className="puppy-desc">{puppy.description}</p>
+                    <p className="puppy-price">{puppy.price}</p>
+                  </div>
+                </button>
+              ))}
+            </section>
+          )}
+        </div>
+      </section>
+
+      {soldPuppies.length > 0 && (
+        <section className="available-section-shell sold-gallery-section">
+          <div className="available-section-top">
+            <div>
+              <p className="eyebrow">Past Puppies</p>
+              <h2>Sold Puppy Gallery</h2>
+            </div>
+
+            <p>
+              A clean look at puppies that have already found their new homes.
+            </p>
+          </div>
+
+          <div className="available-section-inner">
+            <section className="puppy-grid">
+              {soldPuppies.map((puppy) => (
+                <button
+                  key={puppy.id}
+                  className="puppy-card sold-card"
+                  onClick={() => openPuppy(puppy)}
+                >
+                  <div className="puppy-image-wrap">
+                    <img src={puppy.image_url} alt={puppy.name} />
+                    <span className="sold-badge">Sold</span>
+                  </div>
+
+                  <div className="puppy-card-content">
+                    <h3>{puppy.name}</h3>
+                    <p className="puppy-gender">{puppy.gender}</p>
+                    <p className="puppy-desc">{puppy.description}</p>
+                  </div>
+                </button>
+              ))}
+            </section>
+          </div>
         </section>
       )}
 
       <Reviews />
-      
+
       {selected && (
         <div className="modal-overlay" onClick={closeModal}>
           <div

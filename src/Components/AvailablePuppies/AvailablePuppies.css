@@ -1,18 +1,19 @@
 .available-page {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 5rem 1.25rem;
+  padding: 4.5rem 1.25rem;
 }
 
 .available-hero {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
 }
 
 .available-hero h1 {
   margin: 0;
   font-family: "Playfair Display", serif;
-  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-size: clamp(2.8rem, 6vw, 5.4rem);
+  line-height: 0.95;
 }
 
 .available-hero p {
@@ -22,15 +23,56 @@
   line-height: 1.7;
 }
 
-.no-puppies-box {
-  text-align: center;
-  padding: 4rem 1rem;
-  border-radius: 30px;
-  background: var(--card);
+.available-section-shell {
+  margin: 3rem auto 0;
+  padding: 1.4rem;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top left, rgba(217, 74, 56, 0.16), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018)),
+    var(--card);
   border: 1px solid var(--card-border);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
 }
 
-.no-puppies-box h2 {
+.available-section-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 2rem;
+  padding: 0.5rem 0.5rem 1.4rem;
+}
+
+.available-section-top h2 {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1;
+}
+
+.available-section-top > p {
+  max-width: 470px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.available-section-inner {
+  padding: 1rem;
+  border-radius: 28px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.no-puppies-box {
+  text-align: center;
+  padding: 3.5rem 1rem;
+  border-radius: 26px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px dashed var(--card-border);
+}
+
+.no-puppies-box h3 {
   margin: 0 0 0.75rem;
   font-size: 2rem;
 }
@@ -42,31 +84,33 @@
 
 .puppy-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
 }
 
 .puppy-card {
   text-align: left;
   color: white;
   border: 1px solid var(--card-border);
-  border-radius: 26px;
+  border-radius: 24px;
   overflow: hidden;
-  background: var(--card);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+    rgba(12, 12, 12, 0.92);
   padding: 0;
   cursor: pointer;
   transition: transform 220ms ease, box-shadow 220ms ease, border 220ms ease;
 }
 
 .puppy-card:hover {
-  transform: translateY(-7px);
+  transform: translateY(-6px);
   border-color: rgba(217, 74, 56, 0.7);
-  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.42);
 }
 
 .puppy-image-wrap {
   position: relative;
-  height: 240px;
+  height: 220px;
   overflow: hidden;
 }
 
@@ -97,7 +141,7 @@
 }
 
 .puppy-card-content {
-  padding: 1.25rem;
+  padding: 1.2rem;
 }
 
 .status-label {
@@ -111,7 +155,7 @@
   background: rgba(217, 74, 56, 0.16);
   border: 1px solid rgba(217, 74, 56, 0.45);
   color: #ffb6aa;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 900;
 }
 
@@ -123,13 +167,17 @@
 .puppy-gender {
   margin: 0 0 0.75rem;
   color: white;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .puppy-desc {
   color: var(--muted);
   line-height: 1.6;
   margin: 0 0 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .puppy-price {
@@ -140,23 +188,7 @@
 }
 
 .sold-gallery-section {
-  margin-top: 5rem;
-}
-
-.sold-gallery-heading {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.sold-gallery-heading h2 {
-  margin: 0;
-  font-family: "Playfair Display", serif;
-  font-size: clamp(2.3rem, 5vw, 4rem);
-}
-
-.sold-gallery-heading p {
-  color: var(--muted);
-  margin: 0.75rem auto 0;
+  margin-top: 3rem;
 }
 
 .sold-card {
@@ -423,7 +455,7 @@
 
 @media (max-width: 1100px) {
   .puppy-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .interest-modal-grid {
@@ -437,8 +469,13 @@
 }
 
 @media (max-width: 800px) {
-  .puppy-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .available-section-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .available-section-top > p {
+    max-width: 100%;
   }
 
   .interest-modal {
@@ -449,6 +486,15 @@
 @media (max-width: 620px) {
   .available-page {
     padding: 3rem 1rem;
+  }
+
+  .available-section-shell {
+    padding: 1rem;
+    border-radius: 28px;
+  }
+
+  .available-section-inner {
+    padding: 0.8rem;
   }
 
   .puppy-grid,

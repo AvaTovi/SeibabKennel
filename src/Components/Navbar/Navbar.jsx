@@ -32,6 +32,10 @@ const Navbar = () => {
           Studs
         </NavLink>
 
+        <NavLink to="/puppy-info" className="nav-link">
+          Puppy Info
+        </NavLink>
+
         <NavLink to="/about" className="nav-link">
           About
         </NavLink>
