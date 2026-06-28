@@ -52,7 +52,7 @@ const Contact = () => {
               <strong>Location:</strong> Dallas, TX
             </p>
             <p>
-              <strong>Phone:</strong> (555) 123-4567
+              <strong>Phone:</strong> (972) 330-3392
             </p>
             <p>
               <strong>Email:</strong> info@seibabkennel.com
