@@ -36,7 +36,7 @@ const Footer = () => {
 
       <div className="footer-bottom">
         <p>Seibab Kennel Inc. © 2023</p>
-        <p>Phone: (555) 123-4567 | Email: info@seibabkennel.com</p>
+        <p>Phone: (972) 330-3392 | Email: info@seibabkennel.com</p>
       </div>
     </footer>
   );
