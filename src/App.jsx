@@ -10,6 +10,7 @@ import Contact from "./Components/Contact/Contact";
 import Admin from "./Components/Admin/Admin";
 import Footer from "./Components/Footer/Footer";
 import WhatsNew from "./Components/WhatsNew/WhatsNew";
+import ReviewsPage from "./Components/ReviewsPage/ReviewsPage";
 import "./App.css";
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/available-puppies" element={<AvailablePuppies />} />
         <Route path="/puppy-info" element={<PuppyInfo />} />
         <Route path="/studs" element={<Studs />} />
+        <Route path="/reviews" element={<ReviewsPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/admin" element={<Admin />} />

@@ -1,7 +1,8 @@
 import React, { useRef } from "react";
 import { supabase } from "../../supabaseClient";
-import Reviews from "../Reviews/Reviews";
 import "./Contact.css";
+
+const INSTAGRAM_URL = "https://www.instagram.com/seibab_kennels/";
 
 const Contact = () => {
   const form = useRef();
@@ -58,6 +59,27 @@ const Contact = () => {
               <strong>Email:</strong> info@seibabkennel.com
             </p>
           </div>
+
+          <div className="social-card">
+            <div>
+              <span className="social-kicker">Follow Seibab Kennel</span>
+              <h3>See Updates on Instagram</h3>
+              <p>
+                Follow for new puppies, studs, upcoming breedings, and
+                behind-the-scenes kennel content.
+              </p>
+            </div>
+
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="instagram-button"
+            >
+              <span>Instagram</span>
+              <strong>@seibab_kennels</strong>
+            </a>
+          </div>
         </div>
 
         <form className="contact-form" ref={form} onSubmit={sendMessage}>
@@ -89,8 +111,6 @@ const Contact = () => {
           <button type="submit">Send Message</button>
         </form>
       </section>
-
-      <Reviews />
     </main>
   );
 };

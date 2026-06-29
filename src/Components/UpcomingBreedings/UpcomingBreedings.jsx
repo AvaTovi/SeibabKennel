@@ -64,19 +64,31 @@ export default function UpcomingBreedings() {
 
               <h3>{breeding.title}</h3>
 
+              {(breeding.sire || breeding.dam) && (
+                <div className="upcoming-parent-grid">
+                  {breeding.sire && (
+                    <div className="upcoming-parent-card">
+                      {breeding.sire_image_url && (
+                        <img src={breeding.sire_image_url} alt={breeding.sire} />
+                      )}
+                      <span>Sire</span>
+                      <strong>{breeding.sire}</strong>
+                    </div>
+                  )}
+
+                  {breeding.dam && (
+                    <div className="upcoming-parent-card">
+                      {breeding.dam_image_url && (
+                        <img src={breeding.dam_image_url} alt={breeding.dam} />
+                      )}
+                      <span>Dam</span>
+                      <strong>{breeding.dam}</strong>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="upcoming-breeding-details">
-                {breeding.sire && (
-                  <p>
-                    <strong>Sire:</strong> {breeding.sire}
-                  </p>
-                )}
-
-                {breeding.dam && (
-                  <p>
-                    <strong>Dam:</strong> {breeding.dam}
-                  </p>
-                )}
-
                 {breeding.expected_date && (
                   <p>
                     <strong>Expected:</strong> {breeding.expected_date}

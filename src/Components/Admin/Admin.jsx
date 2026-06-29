@@ -2,7 +2,18 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import "./Admin.css";
 
-const ADMIN_PASSWORD = "seibab123";
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "";
+const ADMIN_SESSION_KEY = "seibabAdminSession";
+const ADMIN_SESSION_LENGTH_MS = 8 * 60 * 60 * 1000;
+
+const getSavedAdminSession = () => {
+  try {
+    const savedSession = JSON.parse(localStorage.getItem(ADMIN_SESSION_KEY));
+    return savedSession && savedSession.expiresAt > Date.now();
+  } catch {
+    return false;
+  }
+};
 
 const Admin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -57,7 +68,9 @@ const Admin = () => {
     title: "",
     imageFile: null,
     sire: "",
+    sireImageFile: null,
     dam: "",
+    damImageFile: null,
     expectedDate: "",
     status: "Upcoming",
     description: "",
@@ -66,7 +79,7 @@ const Admin = () => {
   });
 
   useEffect(() => {
-    setIsLoggedIn(localStorage.getItem("adminLoggedIn") === "true");
+    setIsLoggedIn(getSavedAdminSession());
     fetchMessages();
     fetchPuppies();
     fetchStuds();
@@ -183,8 +196,16 @@ const Admin = () => {
   const handleLogin = (e) => {
     e.preventDefault();
 
+    if (!ADMIN_PASSWORD) {
+      alert("Admin password is not set. Add VITE_ADMIN_PASSWORD to your .env file and restart the site.");
+      return;
+    }
+
     if (password === ADMIN_PASSWORD) {
-      localStorage.setItem("adminLoggedIn", "true");
+      localStorage.setItem(
+        ADMIN_SESSION_KEY,
+        JSON.stringify({ expiresAt: Date.now() + ADMIN_SESSION_LENGTH_MS })
+      );
       setIsLoggedIn(true);
       setPassword("");
     } else {
@@ -193,6 +214,7 @@ const Admin = () => {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem(ADMIN_SESSION_KEY);
     localStorage.removeItem("adminLoggedIn");
     setIsLoggedIn(false);
   };
@@ -313,7 +335,17 @@ const Admin = () => {
 
     const imageUrl = await uploadFile(
       breedingForm.imageFile,
-      "upcoming-breedings"
+      "upcoming-breedings/main"
+    );
+
+    const sireImageUrl = await uploadFile(
+      breedingForm.sireImageFile,
+      "upcoming-breedings/sire"
+    );
+
+    const damImageUrl = await uploadFile(
+      breedingForm.damImageFile,
+      "upcoming-breedings/dam"
     );
 
     const { error } = await supabase.from("UpcomingBreedings").insert([
@@ -321,7 +353,9 @@ const Admin = () => {
         title: breedingForm.title,
         image_url: imageUrl,
         sire: breedingForm.sire,
+        sire_image_url: sireImageUrl,
         dam: breedingForm.dam,
+        dam_image_url: damImageUrl,
         expected_date: breedingForm.expectedDate,
         status: breedingForm.status,
         description: breedingForm.description,
@@ -341,7 +375,9 @@ const Admin = () => {
       title: "",
       imageFile: null,
       sire: "",
+      sireImageFile: null,
       dam: "",
+      damImageFile: null,
       expectedDate: "",
       status: "Upcoming",
       description: "",
@@ -369,10 +405,24 @@ const Admin = () => {
   };
 
   const updateBreedingImage = async (id, file) => {
-    const imageUrl = await uploadFile(file, "upcoming-breedings");
+    const imageUrl = await uploadFile(file, "upcoming-breedings/main");
     if (!imageUrl) return;
 
     await updateBreeding(id, "image_url", imageUrl);
+  };
+
+  const updateBreedingSireImage = async (id, file) => {
+    const imageUrl = await uploadFile(file, "upcoming-breedings/sire");
+    if (!imageUrl) return;
+
+    await updateBreeding(id, "sire_image_url", imageUrl);
+  };
+
+  const updateBreedingDamImage = async (id, file) => {
+    const imageUrl = await uploadFile(file, "upcoming-breedings/dam");
+    if (!imageUrl) return;
+
+    await updateBreeding(id, "dam_image_url", imageUrl);
   };
 
   const deleteBreeding = async (id) => {
@@ -716,7 +766,7 @@ Seibab Kennel`;
           />
 
           <button type="submit">Log In</button>
-          <small>Temporary password: seibab123</small>
+          <small>Admin sessions expire after 8 hours. Set the password in your .env file.</small>
         </form>
       </main>
     );
@@ -1124,11 +1174,35 @@ Seibab Kennel`;
               }
             />
 
+            <label className="admin-file-label">Sire / Male Picture</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setBreedingForm({
+                  ...breedingForm,
+                  sireImageFile: e.target.files[0],
+                })
+              }
+            />
+
             <input
               placeholder="Dam / Female"
               value={breedingForm.dam}
               onChange={(e) =>
                 setBreedingForm({ ...breedingForm, dam: e.target.value })
+              }
+            />
+
+            <label className="admin-file-label">Dam / Female Picture</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setBreedingForm({
+                  ...breedingForm,
+                  damImageFile: e.target.files[0],
+                })
               }
             />
 
@@ -1218,7 +1292,7 @@ Seibab Kennel`;
                   />
                 )}
 
-                <label className="admin-file-label">Change Image</label>
+                <label className="admin-file-label">Change Main Breeding Image</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -1226,6 +1300,46 @@ Seibab Kennel`;
                     updateBreedingImage(breeding.id, e.target.files[0])
                   }
                 />
+
+                <div className="admin-gallery-section">
+                  <h4>Sire and Dam Pictures</h4>
+
+                  <div className="admin-gallery-grid">
+                    <div className="admin-gallery-item">
+                      {breeding.sire_image_url && (
+                        <img src={breeding.sire_image_url} alt={breeding.sire || "Sire"} />
+                      )}
+                      <label className="admin-file-label">Change Sire Picture</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          updateBreedingSireImage(
+                            breeding.id,
+                            e.target.files[0]
+                          )
+                        }
+                      />
+                    </div>
+
+                    <div className="admin-gallery-item">
+                      {breeding.dam_image_url && (
+                        <img src={breeding.dam_image_url} alt={breeding.dam || "Dam"} />
+                      )}
+                      <label className="admin-file-label">Change Dam Picture</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          updateBreedingDamImage(
+                            breeding.id,
+                            e.target.files[0]
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
 
                 <input
                   value={breeding.title || ""}

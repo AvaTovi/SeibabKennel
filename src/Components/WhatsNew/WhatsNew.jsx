@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
-import Reviews from "../Reviews/Reviews";
 import "./WhatsNew.css";
 
 export default function WhatsNew() {
@@ -67,8 +66,6 @@ export default function WhatsNew() {
           ))}
         </section>
       )}
-
-      <Reviews />
     </main>
   );
 }

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import "./AvailablePuppies.css";
-import Reviews from "../Reviews/Reviews";
 import UpcomingBreedings from "../UpcomingBreedings/UpcomingBreedings";
 
 export default function AvailablePuppies() {
@@ -199,8 +198,6 @@ ${interestForm.message}
           </div>
         </section>
       )}
-
-      <Reviews />
 
       {selected && (
         <div className="modal-overlay" onClick={closeModal}>
